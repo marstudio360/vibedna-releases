@@ -38,7 +38,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | godot | `godot-vibe-mcp-1.1.5.zip` | 61,778 | 5 | no (paid tool): checksums and file list only |
 | google-ads | `google-ads-dna-1.0.3.zip` | 16,420 | 4 | no (paid tool): checksums and file list only |
 | gumroad | `gumroad-dna-2.3.2.zip` | 23,655 | 11 | yes, in `source/gumroad/` |
-| jester | `jester-mcp-1.0.5.zip` | 161,599 | 53 | yes, in `source/jester/` |
+| jester | `jester-mcp-1.0.5.zip` | 161,599 | 53 | no (paid tool): checksums and file list only |
 | social-brain | `social-brain-mcp-1.11.18.zip` | 451,734 | 31 | no (paid tool): checksums and file list only |
 | unity | `unity-vibe-mcp-1.0.3.zip` | 36,780 | 4 | no (paid tool): checksums and file list only |
 | unreal | `unreal-vibe-mcp-1.0.3.zip` | 27,660 | 4 | no (paid tool): checksums and file list only |
