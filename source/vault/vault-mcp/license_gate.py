@@ -1,4 +1,4 @@
-"""Licence gate for VibeDNA MCP servers. One source, copied into each package.
+"""Licence gate for Vibedna MCP servers. One source, copied into each package.
 
 WHY A COPY PER PACKAGE AND NOT AN IMPORT: every MCP we sell has to run on its own, on a
 machine that has nothing else of ours. A shared install would be one more thing that can

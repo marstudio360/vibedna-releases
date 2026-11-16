@@ -1,27 +1,28 @@
 """
-Vault MCP — VibeDNA Credential Broker
+Vault MCP: Vibedna Credential Broker
 Local MCP that gives all Claude sessions access to the encrypted vault.
-Master password stored in Windows Credential Manager — never in plaintext.
+Master password stored in Windows Credential Manager: never in plaintext.
 
 Tools:
-  credential_exists(name)          — check before asking the user for a key
-  get_credential(name, key)        — retrieve a specific key value
-  list_credentials()               — all names + categories (no values)
-  search_credentials(term)         — find by name or category
-  add_credential(name, category, fields, notes) — add new entry
+  credential_exists(name)         : check before asking the user for a key
+  get_credential(name, key)       : retrieve a specific key value
+  list_credentials()              : all names + categories (no values)
+  search_credentials(term)        : find by name or category
+  add_credential(name, category, fields, notes): add new entry
 """
 
 import os
 import sys
 import json
+import hmac
 import keyring
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
-# El cifrado viaja ADENTRO del paquete. Esto apuntaba a una carpeta cuatro niveles
-# arriba, la de la maquina que lo construyo, asi que en la computadora de un comprador
-# el MCP arrancaba sin poder abrir absolutamente nada. Ahora es un import local, y el
-# mismo archivo es ademas una linea de comandos: el dueno puede leer sus claves sin IA.
+# The encryption travels INSIDE the package. This used to point at a folder four levels
+# up, on the machine that built it, so on a buyer's computer the MCP started without
+# being able to open anything at all. Now it is a local import, and the same file is
+# also a command line: the owner can read their keys without an AI.
 sys.path.insert(0, str(Path(__file__).parent))
 
 try:
@@ -37,7 +38,7 @@ mcp = FastMCP("vault-mcp")
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.1.5"
+VERSION = "1.1.6"
 PRODUCT_SLUG = "vault"
 
 
@@ -91,11 +92,11 @@ def check_for_update() -> str:
 
 
 def _get_password() -> str | None:
-    """La clave maestra sale del llavero del sistema, y si no, del entorno.
+    """The master password comes from the system keyring and, failing that, from the environment.
 
-    Sin el respaldo por entorno, un comprador que corre esto en un servidor sin llavero
-    (una caja Linux headless, un contenedor) no tenia forma de darle la clave y el MCP
-    quedaba mudo sin decir por que.
+    Without the environment fallback, a buyer who runs this on a server with no keyring
+    (a headless Linux box, a container) had no way to give it the password and the MCP
+    stayed silent without saying why.
     """
     import os as _os
     return (keyring.get_password(KEYRING_SERVICE, KEYRING_USER)
@@ -131,7 +132,7 @@ def _save_vault(data: dict) -> bool:
 
 
 def _get_fields(entry: dict) -> dict:
-    """Normalize entry — vault uses 'fields', our new entries also use 'fields'."""
+    """Normalize entry: vault uses 'fields', our new entries also use 'fields'."""
     return entry.get("fields", {})
 
 
@@ -140,15 +141,15 @@ def credential_exists(name: str) -> str:
     """[FREE] Check if a named credential exists in the vault before asking the user for it."""
     _, entries = _load_vault()
     if entries is None:
-        return "Vault unavailable — check Credential Manager has the master password."
+        return "Vault unavailable: check Credential Manager has the master password."
     if name in entries:
         entry = entries[name]
         field_names = list(_get_fields(entry).keys())
-        return f"YES — '{name}' exists. Category: {entry.get('category','?')}. Fields: {field_names}"
+        return f"YES: '{name}' exists. Category: {entry.get('category','?')}. Fields: {field_names}"
     close = [k for k in entries if name.lower() in k.lower()]
     if close:
         return f"NO exact match for '{name}'. Similar entries: {close}"
-    return f"NO — '{name}' not in vault."
+    return f"NO: '{name}' not in vault."
 
 
 @mcp.tool()
@@ -156,7 +157,7 @@ def get_credential(name: str, key: str = "") -> str:
     """[FREE] Retrieve a credential value from the vault by entry name and field/key name."""
     _, entries = _load_vault()
     if entries is None:
-        return "Vault unavailable — check Credential Manager has the master password."
+        return "Vault unavailable: check Credential Manager has the master password."
     if name not in entries:
         close = [k for k in entries if name.lower() in k.lower()]
         hint = f" Did you mean: {close}?" if close else ""
@@ -176,7 +177,7 @@ def get_credential(name: str, key: str = "") -> str:
 
 @mcp.tool()
 def list_credentials() -> str:
-    """[FREE] List all vault entries — names, categories, field names. No values shown."""
+    """[FREE] List all vault entries: names, categories, field names. No values shown."""
     _, entries = _load_vault()
     if entries is None:
         return "Vault unavailable."
@@ -187,7 +188,7 @@ def list_credentials() -> str:
         cat = entry.get("category", "misc")
         field_names = list(_get_fields(entry).keys())
         by_cat.setdefault(cat, []).append((name, field_names))
-    lines = [f"Vault — {len(entries)} entries:"]
+    lines = [f"Vault, {len(entries)} entries:"]
     for cat, items in sorted(by_cat.items()):
         lines.append(f"\n[{cat.upper()}]")
         for name, field_names in items:
@@ -219,7 +220,7 @@ def add_credential(name: str, category: str, fields: str, notes: str = "") -> st
     """[FREE] Add a new credential. fields = JSON string e.g. '{\"API_KEY\": \"value\"}'."""
     full_data, entries = _load_vault()
     if full_data is None:
-        return "Vault unavailable — cannot add credential."
+        return "Vault unavailable: cannot add credential."
     try:
         field_dict = json.loads(fields)
     except json.JSONDecodeError as e:
@@ -244,9 +245,9 @@ def add_credential(name: str, category: str, fields: str, notes: str = "") -> st
 
 # ============= Phase 2: extended tools =============
 
-# El archivo cifrado y donde van los respaldos. Los dos salian de rutas de la maquina
-# que construyo esto: una carpeta suya y un disco suyo. En la
-# computadora de un comprador ninguna de las dos existe, asi que respaldaba al vacio.
+# The encrypted file and where the backups go. Both used to come from paths of the
+# machine that built this: a folder and a disk of its own. On a buyer's computer
+# neither exists, so it was backing up to nowhere.
 VAULT_FILE_PATH = _vault_mod.VAULT if VAULT_AVAILABLE else Path.home() / ".vibedna-vault" / "vault.enc"
 DEFAULT_BACKUP_HOME = Path.home() / ".vibedna-vault" / "backups"
 BACKUP_RETAIN = 30
@@ -257,7 +258,7 @@ def _backup_dir() -> Path:
 
 
 def _do_backup() -> tuple[bool, str]:
-    """Copy encrypted vault file to backup home. No password needed — file is encrypted."""
+    """Copy encrypted vault file to backup home. No password needed: file is encrypted."""
     import shutil, datetime
     if not VAULT_FILE_PATH.exists():
         return False, f"Vault file not found at {VAULT_FILE_PATH}"
@@ -335,7 +336,7 @@ def delete_credential(name: str, confirm: str) -> str:
     if name not in entries:
         return f"Entry '{name}' not found."
     if confirm != name:
-        return f"Confirmation mismatch — pass confirm='{name}' to delete."
+        return f"Confirmation mismatch: pass confirm='{name}' to delete."
     del full_data["entries"][name]
     if _save_vault(full_data):
         return f"Deleted '{name}'."
@@ -523,7 +524,7 @@ TEMPLATES = {
 
 
 def _log_usage(entry_name: str, field: str) -> None:
-    """Append a JSONL audit record. Silent on failure — never blocks credential access."""
+    """Append a JSONL audit record. Silent on failure: never blocks credential access."""
     try:
         import datetime
         LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -607,9 +608,9 @@ def check_rotation_due(days: int = 90) -> str:
     if overdue:
         lines.append(f"OVERDUE (>{days} days):")
         for name, cat, age in sorted(overdue, key=lambda x: -x[2]):
-            lines.append(f"  [{cat}] {name} — {age} days since last rotation")
+            lines.append(f"  [{cat}] {name}: {age} days since last rotation")
     if unknown:
-        lines.append(f"\nUNKNOWN (no rotation timestamp — created before tracking):")
+        lines.append(f"\nUNKNOWN (no rotation timestamp, created before tracking):")
         for name, cat in sorted(unknown):
             lines.append(f"  [{cat}] {name}")
     if not lines:
@@ -704,6 +705,57 @@ def add_with_template(service: str, name: str, fields: str, notes: str = "") -> 
     return result
 
 
+def _require_bearer(app, token: str):
+    """Wrap a web (ASGI) app so every request must carry 'Authorization: Bearer <token>'.
+
+    A request without exactly that header gets a 401 and never reaches the app behind
+    it, so no tool runs and no secret is read. Start-up and shutdown events (lifespan)
+    are not requests and pass through.
+    """
+    expected = b"Bearer " + token.encode("utf-8")
+
+    async def guarded(scope, receive, send):
+        if scope["type"] not in ("http", "websocket"):
+            await app(scope, receive, send)
+            return
+        sent = [v for k, v in (scope.get("headers") or []) if k.lower() == b"authorization"]
+        if len(sent) == 1 and hmac.compare_digest(sent[0], expected):
+            await app(scope, receive, send)
+            return
+        if scope["type"] == "websocket":
+            await send({"type": "websocket.close", "code": 1008})
+            return
+        body = b'{"error": "unauthorized", "hint": "send the header Authorization: Bearer <MCP_HTTP_TOKEN>"}'
+        await send({"type": "http.response.start", "status": 401, "headers": [
+            (b"content-type", b"application/json"),
+            (b"content-length", str(len(body)).encode("ascii")),
+            (b"www-authenticate", b"Bearer"),
+        ]})
+        await send({"type": "http.response.body", "body": body})
+
+    return guarded
+
+
+def _http_plan(app, env):
+    """Decide how the web mode (PORT is set) starts, without starting anything.
+
+    Returns (app, host, port), where app only answers requests that carry the token.
+    Exits when MCP_HTTP_TOKEN is empty: the web mode has no login of its own, and no
+    setting turns this check off. It listens on this machine only (127.0.0.1) unless
+    MCP_HOST names another address.
+    """
+    token = (env.get("MCP_HTTP_TOKEN") or "").strip()
+    if not token:
+        raise SystemExit(
+            "[vault] Web mode was asked for (PORT is set) but did not start: MCP_HTTP_TOKEN "
+            "is empty, and without it anyone who can reach that port could read every "
+            "stored secret. Set MCP_HTTP_TOKEN to a long random text and start again; "
+            "clients must then send the header 'Authorization: Bearer <that text>'."
+        )
+    host = (env.get("MCP_HOST") or "").strip() or "127.0.0.1"
+    return _require_bearer(app, token), host, int(env["PORT"])
+
+
 if __name__ == "__main__":
     if "--backup" in sys.argv:
         ok, info = _do_backup()
@@ -711,13 +763,8 @@ if __name__ == "__main__":
             print(f"[vault-backup] {info}", file=sys.stderr)
         sys.exit(0)
     if os.environ.get("PORT"):
+        _app, _host, _port = _http_plan(mcp.streamable_http_app(), os.environ)
         import uvicorn
-        uvicorn.run(mcp.streamable_http_app(), host="0.0.0.0", port=int(os.environ["PORT"]))
+        uvicorn.run(_app, host=_host, port=_port)
     else:
-        try:
-            sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "_lib"))
-            import bulletproof
-            bulletproof.protect("vault")
-        except Exception as _e:
-            print(f"[vault] bulletproof unavailable: {_e}", file=sys.stderr)
         mcp.run()  # stdio for local .mcp.json

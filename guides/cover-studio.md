@@ -5,9 +5,9 @@ description: Install Cover Studio MCP, which lets your AI drive a cover studio t
 
 # Cover Studio MCP: Install Guide
 
-This guide matches version 1.1.4.
+This guide matches version 1.1.5.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 12 files and read them all: `START-HERE.md`; in `mcp/`, `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py`; in `server/`, the six `.py` files the studio runs (`cover_editor_api.py`, `cover_gen.py`, `cover_gen_pro.py`, `cover_styles.py`, `cover_fx.py`, `cover_filters.py`). Say in plain words what they do. Ask before anything is written. Never ask for the token in the chat. Ask again before `add_cover_effect` (it stores Python code that the studio then runs), `add_font` (it downloads a file), `delete_cover_effect` and any tool that changes a project.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 13 files and read them all: `START-HERE.md`; in `mcp/`, `INSTALL.md`, `MANUAL.md`, `START_PROMPT.md`, `requirements.txt` and `server.py`; in `server/`, `requirements.txt` and the six `.py` files the studio runs (`cover_editor_api.py`, `cover_gen.py`, `cover_gen_pro.py`, `cover_styles.py`, `cover_fx.py`, `cover_filters.py`). Say in plain words what they do. Ask before anything is written. Never ask for the token in the chat. Ask again before `add_cover_effect` (it stores Python code that the studio then runs), `add_font` (it downloads a file), `delete_cover_effect` and any tool that changes a project.
 
 ## What it is
 
@@ -15,17 +15,17 @@ Two parts, both on your own computer. The studio (`server/`) is a small web serv
 
 ## Trust box
 
-- **File:** `cover-studio-mcp-1.1.4.zip`, 71,018 bytes, 12 files: `START-HERE.md` at the root, the MCP server in `mcp/`, the studio's code in `server/`.
-- **SHA-256:** `ef9aae02d5450e08adc9a66800d00a88bef76be3cf8d091d214bf1e84303b6f8`. Check before unzipping; stop if it differs. Linux: `sha256sum cover-studio-mcp-1.1.4.zip`. macOS: `shasum -a 256 cover-studio-mcp-1.1.4.zip`. Windows PowerShell: `Get-FileHash cover-studio-mcp-1.1.4.zip`.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/cover-studio-mcp-1.1.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
-- **Documents:** `INSTALL.md` in the zip (in `mcp/`, like `MANUAL.md`) is this guide (the same text as https://vibedna.ai/installs/cover-studio.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md` is the product's own older document, kept for what this guide does not repeat (the tool list, how a custom effect is written, the optional studio settings). Where it shows another way to install (a plain `pip install`, a settings entry written by hand with the token in it), follow this guide. `START-HERE.md` is a short start note; it says the studio listens on `127.0.0.1`, but the code listens on every network interface.
-- **Dependencies:** the MCP server has 1, pinned to the exact tested version: `mcp==1.30.0`. The studio also needs Pillow and numpy; the zip has no requirements file for them, so step 1 installs them without a pinned version.
-- **Settings it reads:** MCP server: `COVER_STUDIO_TOKEN` (required) and `COVER_STUDIO_URL` (optional, default `http://127.0.0.1:8798`). Studio: `COVER_EDITOR_TOKEN` (required, it refuses to start without it) and, optional, `COVER_STUDIO_HOME`, `COVER_EDITOR_PORT`, `COVER_STUDIO_FONTS`, `COVER_STUDIO_LOGO`, `COVER_GEN_CACHE`.
+- **File:** `cover-studio-mcp-1.1.5.zip`, 71,757 bytes, 13 files: `START-HERE.md` at the root, the MCP server in `mcp/`, the studio's code in `server/`.
+- **SHA-256:** `f6c33428b8a0f4da639eda6d3d9447d0833a61e7919b8af8dce028373b25c3d1`. Check before unzipping; stop if it differs. Linux: `sha256sum cover-studio-mcp-1.1.5.zip`. macOS: `shasum -a 256 cover-studio-mcp-1.1.5.zip`. Windows PowerShell: `Get-FileHash cover-studio-mcp-1.1.5.zip`.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/cover-studio-mcp-1.1.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Documents:** `INSTALL.md` in the zip (in `mcp/`, like `MANUAL.md`) is this guide (the same text as https://vibedna.ai/installs/cover-studio.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md` is the product's own older document, kept for what this guide does not repeat (the tool list, how a custom effect is written, the optional studio settings). Where it shows another way to install (a plain `pip install`, a settings entry written by hand with the token in it), follow this guide. `START-HERE.md` is a short start note.
+- **Dependencies:** the MCP server has 1, pinned to the exact tested version: `mcp==1.30.0`. The studio has 2, in `server/requirements.txt`, given as ranges that stop before the next major version, not as exact pins: `Pillow>=10.0.0,<13` and `numpy>=1.26,<3`. So `pip` installs the newest release inside each range; tested with Pillow 12.3.0 and numpy 2.5.5.
+- **Settings it reads:** MCP server: `COVER_STUDIO_TOKEN` (required) and `COVER_STUDIO_URL` (optional, default `http://127.0.0.1:8798`). Studio: `COVER_EDITOR_TOKEN` (required, it refuses to start without it) and, optional, `COVER_STUDIO_HOME`, `COVER_EDITOR_PORT`, `COVER_EDITOR_HOST`, `COVER_STUDIO_FONTS`, `COVER_STUDIO_LOGO`, `COVER_GEN_CACHE`.
 - **Files it writes:** the studio keeps its data under `~/.cover-studio/` (or `COVER_STUDIO_HOME`): `projects/` with `_history/`, `art/`, `renders/`, `thumb_cache/`, `fonts/`, `gen_cache/` (or `COVER_GEN_CACHE`), `custom_fx.json`, `custom_fonts.json`. The MCP server writes only on `export_art`: into `~/.cover-studio/art/`, or to the `out_path` you name. In the unzipped folder: `.venv/` and Python's `__pycache__` folders. The studio's editor page keeps the token in your browser's storage if you open it with `?token=`.
-- **Network:** the MCP server calls only the studio at `COVER_STUDIO_URL`, with the token in a header (and in the address on `export_art`). It makes no licence check and no call to vibedna.ai. The studio listens on port 8798 on every network interface (`0.0.0.0`), over plain HTTP; its one outgoing call is `add_font`, which downloads the address you give. It answers without the token only on `/` and `/studio` (its editor page) and `/health` (counts of projects, art and fonts). pypi.org is contacted once, by `pip`, at install.
+- **Network:** the MCP server calls only the studio at `COVER_STUDIO_URL`, with the token in a header (and in the address on `export_art`). It makes no licence check and no call to vibedna.ai. The studio listens on port 8798 on this computer only (`127.0.0.1`), over plain HTTP, unless you start it with `COVER_EDITOR_HOST=0.0.0.0`, which opens it to your network; its one outgoing call is `add_font`, which downloads the address you give. It answers without the token only on `/` and `/studio` (its editor page) and `/health` (counts of projects, art and fonts). pypi.org is contacted once, by `pip`, at install.
 - **Never:** no account, no publishing, no payment.
 
-**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The real risk is the studio. `add_cover_effect` stores Python code, and the studio runs it with your user's rights and no sandbox: once as a trial when it is added, then on every preview or render that uses it. Anyone on your network who has the token can do the same, because the studio listens on every interface. So choose a long random token, keep port 8798 closed in your firewall, never expose the studio to the internet, and have your AI show you an effect's code before adding it. `apply_preset` rebuilds a project's layers, `render_cover` replaces that project's earlier render, and `export_art` overwrites the file at the path you name.
+**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The real risk is the studio. `add_cover_effect` stores Python code, and the studio runs it with your user's rights and no sandbox: once as a trial when it is added, then on every preview or render that uses it. The studio answers only on this computer, so what can reach it is a program running here that has the token. If you start it with `COVER_EDITOR_HOST=0.0.0.0`, anyone on your network who has the token can do the same. So choose a long random token, leave `COVER_EDITOR_HOST` unset unless you need another machine to reach the studio, never expose it to the internet, and have your AI show you an effect's code before adding it. `apply_preset` rebuilds a project's layers, `render_cover` replaces that project's earlier render, and `export_art` overwrites the file at the path you name.
 
 ## Keys
 
@@ -40,12 +40,12 @@ Needs Python 3.10 or newer.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip cover-studio-mcp-1.1.4.zip -d ~/vibedna/cover-studio
+   unzip cover-studio-mcp-1.1.5.zip -d ~/vibedna/cover-studio
    cd ~/vibedna/cover-studio/mcp
    ```
    Windows PowerShell:
    ```powershell
-   Expand-Archive cover-studio-mcp-1.1.4.zip -DestinationPath "$env:USERPROFILE\vibedna\cover-studio"
+   Expand-Archive cover-studio-mcp-1.1.5.zip -DestinationPath "$env:USERPROFILE\vibedna\cover-studio"
    cd "$env:USERPROFILE\vibedna\cover-studio\mcp"
    ```
 
@@ -55,13 +55,13 @@ Needs Python 3.10 or newer.
    ```bash
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
-   .venv/bin/python -m pip install pillow numpy
+   .venv/bin/python -m pip install -r ../server/requirements.txt
    ```
    Windows PowerShell:
    ```powershell
    py -m venv .venv
    .venv\Scripts\python.exe -m pip install -r requirements.txt
-   .venv\Scripts\python.exe -m pip install pillow numpy
+   .venv\Scripts\python.exe -m pip install -r ..\server\requirements.txt
    ```
 
 2. You, in your own terminal, in that folder: start the studio and leave the window open.
@@ -76,7 +76,7 @@ Needs Python 3.10 or newer.
    $env:COVER_EDITOR_TOKEN = "YOUR_TOKEN"
    .venv\Scripts\python.exe ..\server\cover_editor_api.py
    ```
-   It prints `COVER EDITOR API on 0.0.0.0:8798`. It does not start by itself: run these two lines again after a reboot.
+   It prints `COVER EDITOR API on 127.0.0.1:8798`. It does not start by itself: run these two lines again after a reboot.
 
 3. You, in your own terminal: register the MCP server in Claude Code at user scope, with full paths and the same token.
 
@@ -99,7 +99,7 @@ Needs Python 3.10 or newer.
    ```
    On Windows the command ends in `.venv\Scripts\python.exe`.
 
-5. Coming from an earlier install: `MANUAL.md` and `START-HERE.md` had you write the entry by hand in a `.mcp.json` file with the system `python`, and that entry can keep an old copy running. Check with `claude mcp get cover-studio`, then remove the old entry (`claude mcp remove cover-studio -s project` from that folder, or delete it from that file).
+5. Coming from an earlier install: earlier versions had the studio listen on every network interface, and this one listens on this computer only, so stop the old studio and start this one (step 2). `MANUAL.md` and `START-HERE.md` had you write the entry by hand in a `.mcp.json` file with the system `python`, and that entry can keep an old copy running. Check with `claude mcp get cover-studio`, then remove the old entry (`claude mcp remove cover-studio -s project` from that folder, or delete it from that file).
 
 6. Restart Claude Code: close it and open a new session.
 

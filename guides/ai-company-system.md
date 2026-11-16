@@ -5,7 +5,7 @@ description: Install the AI Company System, an MCP server that turns Claude Code
 
 # AI Company System: Install Guide
 
-This guide matches version 1.0.2.
+This guide matches version 1.0.3.
 
 > **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 88 files, read `INSTALL.md`, `MANUAL.md` and `requirements.txt` in `engine/`, then `server.py` and the `.py` files it loads (`core.py`, `meter.py`, `remote.py`, `safe_sync.py`, `git_lock.py`, `tasks.py`, `genesis.py`, `rules.py`, `urgent.py`, `usage.py`, `status.py`, `server_setup.py`, `night_runner.py`), and say in plain words what they do. Before any optional part, read the script it runs. Ask before anything is written. Never ask for a key or token in the chat. Ask again before `night_shift` and before any `server_` tool.
 
@@ -15,13 +15,13 @@ A Python MCP server that runs on your computer. Each Claude Code session can ent
 
 ## Trust box
 
-- **File:** `ai-company-system-1.0.2.zip`, 325,517 bytes, 88 files, all inside one `ai-company-system/` folder; the server is in `ai-company-system/engine/`.
-- **SHA-256:** `241c6b501d98d654fd640ab6441385e84ba33d5a734a836be018ec3e60c6a53d`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum ai-company-system-1.0.2.zip`
-  - macOS: `shasum -a 256 ai-company-system-1.0.2.zip`
-  - Windows PowerShell: `Get-FileHash ai-company-system-1.0.2.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/ai-company-system-1.0.2.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
-- **Documents in the zip:** `INSTALL.md` in the zip (in `engine/`) is this guide (the same text as https://vibedna.ai/installs/ai-company-system.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md`, next to it, is the product's own older document, kept for what this guide does not repeat (server mode, the owner app, the credit rules). At the zip root: `START_HERE.md` (older setup steps), `AI_COMPANY_SYSTEM_JOURNAL.md` (the field manual), `MANIFEST.md` (every file with its checksum) and `TEST.md` (the test run of version 1.0.0), `START_PROMPT.md`. Also `engine/EVENTS.md`, `skills/ai-director/SKILL.md` and the starter texts in `engine/template/`. Where any of them shows another way to install (copying the engine to `~/.ai-company`, `pip` in an activated venv), follow this guide; where they or a tool's answer name `~/.ai-company/<script>.py`, that script is in your `engine` folder: run it with the `.venv` Python.
+- **File:** `ai-company-system-1.0.3.zip`, 328,890 bytes, 88 files, all inside one `ai-company-system/` folder; the server is in `ai-company-system/engine/`.
+- **SHA-256:** `ae97a3c68760d514c10c73e0af54840a400a3044b0d845a2fb5c904da0e47007`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum ai-company-system-1.0.3.zip`
+  - macOS: `shasum -a 256 ai-company-system-1.0.3.zip`
+  - Windows PowerShell: `Get-FileHash ai-company-system-1.0.3.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/ai-company-system-1.0.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Documents in the zip:** `INSTALL.md` in the zip (in `engine/`) is this guide (the same text as https://vibedna.ai/installs/ai-company-system.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md`, next to it, is the product's own older document, kept for what this guide does not repeat (server mode, the owner app, the credit rules). At the zip root: `START_HERE.md` (older setup steps), `AI_COMPANY_SYSTEM_JOURNAL.md` (the field manual), `MANIFEST.md` (every file with its checksum) and `TEST.md` (the test run of version 1.0.0), `START_PROMPT.md`. Also `engine/EVENTS.md`, `skills/ai-director/SKILL.md` and the starter texts in `engine/template/`. Where any of them shows another way to install (copying the engine to `~/.ai-company`, `pip` in an activated venv), follow this guide; where they name `~/.ai-company/<script>.py`, that script is in your `engine` folder: run it with the `.venv` Python (in an answer of `server_prepare`, `~/.ai-company` is the folder it made on your server).
 - **Dependencies:** 1, pinned to an exact tested version: `mcp==1.30.0`. When a feature needs them it runs the `git`, `claude`, `tmux`, `ssh` and `scp` programs already on your machine.
 - **Settings it reads, all optional:** `AI_COMPANY_HOME` (company folder, default `~/ai-company`), `AI_COMPANY_COMPANY`, `AI_COMPANY_ROLE`, `AI_COMPANY_STATE`, `AI_COMPANY_OUT`, `AI_COMPANY_JOURNALS_DIR`; for server mode `AI_COMPANY_SERVER_SSH`, `_SERVER_USER`, `_SERVER_DIR`, `_SERVER_TOKEN`. The engine reads about 70 names in all, most of them only in the optional scripts, which list theirs in their first lines.
 - **Files the 49 tools write:** the company folder (`init` creates it; `~/ai-company` unless you name another): manuals, inboxes, `tasks.json`, `ROSTER.json`, `messages.md`, questions, the pipeline, `night/`. Outside it: `~/.ai-company/` (`control/answers.jsonl`, `control/urgent.json`, `control/urgent_log.jsonl`, `open_questions.json`), `~/state/tasks_covered_by.log` (on Linux also `git_lock.log`), and, when you change the call phrase, `~/.claude/skills/ai-director/SKILL.md` if it exists.
@@ -32,7 +32,7 @@ A Python MCP server that runs on your computer. Each Claude Code session can ent
   - `message` writes to another role's inbox; if that role runs here in a tmux session named `emp-...`, it also types the text into it and presses Enter (over `ssh` in server mode).
   - The `server_` tools run commands on your server with `sudo`. `server_prepare` creates a Linux user there, installs Claude Code (`npm`) and `mcp` (`pip`), copies your token file, the company folder and the engine, adds a hook and a cron line (the spending brake, every 5 minutes), and on this computer adds a git remote named `server` and pushes. `server_open` starts Claude Code there with `--dangerously-skip-permissions`; `server_say` types into it as if it were you.
   - No tool takes a shell command to run here, and none creates a scheduled task or cron line on this computer.
-- **Optional scripts, never started by the 49 tools:** `install_guard.py` and `install_autosave.py` add hooks to `~/.claude/settings.json`; the second commits and pushes the whole company folder after every reply. `owner_app.py` serves a page on `127.0.0.1:8765`. `brake.py`, `status.py`, `foreman.py`, `routine.sh`, `local_worker.py` and `usage_box.py` are for cron on a Linux server: they close, reopen and start AI sessions, and the last calls api.anthropic.com. `ship_gate.py` resets a site checkout you name, runs your publish command and pushes. `check_access.py` tests keys from a separate vault at graph.facebook.com, api.stripe.com, api.resend.com, api.github.com, api.cloudflare.com or your Supabase URL.
+- **Optional scripts, never started by the 49 tools:** `install_guard.py` and `install_autosave.py` add hooks to `~/.claude/settings.json`; the second commits and pushes the whole company folder after every reply. `owner_app.py` serves a page on `127.0.0.1:8765`. `brake.py`, `status.py`, `foreman.py`, `routine.sh`, `local_worker.py` and `usage_box.py` are for cron on a Linux server: they close, reopen and start AI sessions, and the last calls api.anthropic.com. `usage.py --to-server` and `owner_tokens.py` are for a scheduled task on your own computer in server mode: the first reads your Claude Code login token from `~/.claude/.credentials.json`, sends it to api.anthropic.com and writes your plan percentages on your server; the second counts your own tokens from `~/.claude/projects` and writes the hourly numbers there. Both connect over `ssh` and use `sudo` on the server. `ship_gate.py` resets a site checkout you name, runs your publish command and pushes. `check_access.py` tests keys from a separate vault at graph.facebook.com, api.stripe.com, api.resend.com, api.github.com, api.cloudflare.com or your Supabase URL.
 - **Never:** no licence check, no key asked for, and starting the server writes nothing.
 
 **Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The larger risk is what the sessions do: the night shift and server mode run AI sessions with permission prompts off, guided only by markdown manuals. The spending brake acts only on tmux sessions on Linux, from cron: on your own computer nothing stops a session at a budget except the night shift's check between tasks. The zip's own `TEST.md` says the test ran on Linux, the server tools were not run on a rented server, and Windows and macOS were not tested.
@@ -50,12 +50,12 @@ Needs Python 3.10 or newer and Claude Code; `git` if you want the company folder
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip ai-company-system-1.0.2.zip -d ~/vibedna/ai-company-system
+   unzip ai-company-system-1.0.3.zip -d ~/vibedna/ai-company-system
    cd ~/vibedna/ai-company-system/ai-company-system/engine
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive ai-company-system-1.0.2.zip -DestinationPath "$env:USERPROFILE\vibedna\ai-company-system"
+   Expand-Archive ai-company-system-1.0.3.zip -DestinationPath "$env:USERPROFILE\vibedna\ai-company-system"
    cd "$env:USERPROFILE\vibedna\ai-company-system\ai-company-system\engine"
    ```
 

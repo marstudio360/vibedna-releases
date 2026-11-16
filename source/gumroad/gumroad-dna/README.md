@@ -73,7 +73,10 @@ Add the same `mcpServers` block to `claude_desktop_config.json` (Settings > Deve
 | Variable | Required | What it does |
 |---|---|---|
 | `GUMROAD_ACCESS_TOKEN` | Yes (except for `scan_gumroad_niche`) | Your Gumroad API token |
-| `PORT` | No | If set, serves streamable HTTP on that port instead of stdio |
+| `PORT` | No | If set, serves streamable HTTP on that port instead of stdio. The web mode needs `MCP_HTTP_TOKEN` |
+| `MCP_HTTP_TOKEN` | With `PORT` | A long random text. Every web request must send `Authorization: Bearer <that text>`; without this setting the web mode does not start |
+| `MCP_HOST` (or `HOST`) | No | Address the web mode listens on. Default `127.0.0.1`, this machine only; the `Dockerfile` sets `0.0.0.0`, which a container needs |
+| `MCP_HTTP_OPEN` | No | `1` starts the web mode with no token. Only when a login of your own already sits in front of it: without one, anyone who reaches the port can use every tool on your store |
 
 ## Network
 
@@ -81,6 +84,6 @@ Calls go to `api.gumroad.com` with your token, to `gumroad.com/discover` for nic
 
 ## License
 
-MIT, see [LICENSE](./LICENSE). Copyright (c) 2026 VibeDNA.
+MIT, see [LICENSE](./LICENSE). Copyright (c) 2026 Vibedna.
 
 Support: admin@vibedna.ai

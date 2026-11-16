@@ -5,9 +5,9 @@ description: Install Spotify Manager MCP, the server that lets your AI read your
 
 # Spotify Manager MCP: Install Guide
 
-This guide matches version 1.2.3.
+This guide matches version 1.2.4.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 10 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the other `.py` files it loads (`session.py`, `web_api.py`, `s4a.py`, `pitch.py`, `pitch_queue.py`), and say in plain words what they do. Ask before anything is written. Never ask for a key, token or password in the chat; never open or print `config.json` or `session.json`. Ask again before any tool that changes a playlist or the artist profile, and before `authorize_account`: its answer holds a token, do not repeat it.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 10 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the other `.py` files it loads (`session.py`, `web_api.py`, `s4a.py`, `pitch.py`, `pitch_queue.py`), and say in plain words what they do. Ask before anything is written. Never ask for a key, token or password in the chat; never open or print `config.json` or `session.json`. Ask again before any tool that changes a playlist or the artist profile, and before `authorize_account`: it opens Spotify's consent page in the browser and saves a token to `config.json` (its answer does not show the token).
 
 ## What it is
 
@@ -15,22 +15,22 @@ A Python MCP server that runs on your computer. Your AI reads your Spotify for A
 
 ## Trust box
 
-- **File:** `spotify-manager-mcp-1.2.3.zip`, 49,237 bytes, 10 files, all inside one `spotify-manager-mcp/` folder.
-- **SHA-256:** `7c2a7570dadffc818f40a62900d751389f4477a9870fe628fed087880adc780d`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum spotify-manager-mcp-1.2.3.zip`
-  - macOS: `shasum -a 256 spotify-manager-mcp-1.2.3.zip`
-  - Windows PowerShell: `Get-FileHash spotify-manager-mcp-1.2.3.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/spotify-manager-mcp-1.2.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `spotify-manager-mcp-1.2.4.zip`, 51,684 bytes, 10 files, all inside one `spotify-manager-mcp/` folder.
+- **SHA-256:** `ed36dd746bbb40fcc80c1fb56d067f18aea3cc83e026813ec94466ccb11a9ab2`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum spotify-manager-mcp-1.2.4.zip`
+  - macOS: `shasum -a 256 spotify-manager-mcp-1.2.4.zip`
+  - Windows PowerShell: `Get-FileHash spotify-manager-mcp-1.2.4.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/spotify-manager-mcp-1.2.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Documents in the zip:** `INSTALL.md` in the zip is this guide (the same text as https://vibedna.ai/installs/spotify-manager.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md` is the product's own older document, kept for what this guide does not repeat (creating your Spotify app, what each tool needs, the pitching rules). Where it shows another way to install (a plain `pip install`, a settings entry written by hand with the keys in it), follow this guide. The zip holds no other document.
 - **Dependencies, pinned to exact tested versions:** `mcp==1.30.0`, `websockets==17.4`. `server.py` also tries to import `keyring` and `vault_core` (an optional password vault). They are not installed and not needed: the import sits inside a `try`, and without them values come from the environment or the config file.
 - **Settings it reads, all optional:** the account values `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` (search, public catalog, playlists), `SPOTIFY_REFRESH_TOKEN` (your playlists), `SPOTIFY_ARTIST_ID` (default artist; `label_status` needs it) and `SPOTIFY_REDIRECT_URI`; for the browser `SPOTIFY_MANAGER_CHROME`, `_PROFILE`, `_PORT`, `_BROWSER_HOME`, `_BROWSER_PORT`; for the vault `SPOTIFY_MANAGER_VAULT_PATH`, `_VAULT_SERVICE`, `_VAULT_ENTRY`, `VAULT_MASTER_PASSWORD`; the fallbacks `SPOTIFY_SP_DC`, `SPOTIFY_SP_KEY`, `SPOTIFY_S4A_BEARER`. All are read from the environment; the account values also from `~/.spotify-manager/config.json`.
-- **Files it writes:** `~/.spotify-manager/session.json` (your Spotify session cookies and a short-lived panel token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.spotify-manager/chrome-profile/` (the profile of the Chrome it starts, or the `SPOTIFY_MANAGER_PROFILE` folder). It never writes `config.json`.
+- **Files it writes:** `~/.spotify-manager/session.json` (your Spotify session cookies and a short-lived panel token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.spotify-manager/chrome-profile/` (the profile of the Chrome it starts, or the `SPOTIFY_MANAGER_PROFILE` folder). `authorize_account` writes the refresh token into `~/.spotify-manager/config.json` and keeps the other values in it (owner-only on macOS and Linux, not on Windows); if that file cannot be written, the token goes to `~/.spotify-manager/refresh_token.txt` and the tool's answer names that path. Nothing else writes `config.json`.
 - **Network:** `api.spotify.com` (catalog, search, playlists); `accounts.spotify.com` (app tokens, and the consent page `authorize_account` opens in your browser); `artists.spotify.com` (panel reads with your session cookie; the page its Chrome opens to get the panel token); `generic.wg.spotify.com` (audience analytics and `set_artist_pick`). On your own machine: `127.0.0.1` ports 9222 to 9226, 9231 and 9234 (looking for a Chrome with remote debugging) and `127.0.0.1:8888` (listening up to two minutes for Spotify's answer during `authorize_account`). `developer.spotify.com` is only text in an error message. Nothing goes to vibedna.ai. pypi.org is contacted once, by `pip`, at install.
-- **The browser it starts:** when no Chrome answers on those ports, it starts your installed Google Chrome without a window, with debugging port 9234 open to this computer. The code never closes it, whatever `MANUAL.md` says.
+- **The browser it starts:** when no Chrome answers on those ports, it starts your installed Google Chrome without a window, with debugging port 9234 open to this computer. It closes that Chrome when the read ends, whether the read worked or not. A Chrome it did not start (one already answering on those ports) is used and left open.
 - **Changes your account at once, with no confirmation step:** `create_playlist`, `add_to_playlist`, `remove_from_playlist`, `edit_playlist`, `set_playlist_cover` (uploads the JPEG you name) and `set_artist_pick` (pins a release on your public artist profile). `pitch_watch` with `act=True` submits nothing: it answers with an error text.
 - **Never:** it does not ask for or store your Spotify password, submits no pitch, publishes no music and spends no money.
 
-**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The panel tools use the addresses Spotify's own panel uses, not a public API: they can stop working, and whether Spotify's terms allow this cannot be checked from the zip. `session.json` lets whoever reads it act as you in the panel. While the windowless Chrome runs, any program on your computer can drive it. A Chrome already open with remote debugging is asked for all its cookies; the tool keeps the two Spotify ones. `server.py` adds a folder named `vault-mcp` beside the unzipped folder to Python's import path: keep it absent unless it is your own vault.
+**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The panel tools use the addresses Spotify's own panel uses, not a public API: they can stop working, and whether Spotify's terms allow this cannot be checked from the zip. `session.json` lets whoever reads it act as you in the panel. For the seconds the windowless Chrome runs, any program on your computer can drive it. A Chrome already open with remote debugging is asked for all its cookies; the tool keeps the two Spotify ones. `server.py` adds a folder named `vault-mcp` beside the unzipped folder to Python's import path: keep it absent unless it is your own vault.
 
 ## Keys
 
@@ -41,7 +41,7 @@ Every value goes in `~/.spotify-manager/config.json` (Windows: `C:\Users\<you>\.
 ```
 
 - **Client id and secret:** from a free app you create at developer.spotify.com (`MANUAL.md` step 1; redirect URI exactly `http://127.0.0.1:8888/callback`).
-- **Refresh token:** only for playlists. Ask for `authorize_account` and accept in your browser. The tool returns the token in its answer, so this one value does pass through the chat: the code works that way. Copy it into `config.json` yourself. `MANUAL.md` says it never expires; the tool's own answer says 180 days.
+- **Refresh token:** only for playlists. Ask for `authorize_account` and accept in your browser. The tool saves the token to `config.json` itself and its answer does not show it, so it does not pass through the chat. It lasts 180 days: redo this about twice a year. If `SPOTIFY_REFRESH_TOKEN` is also set in the environment, that value wins and the tool's answer says so.
 - **Artist id:** the last part of `open.spotify.com/artist/<id>`. Restart Claude Code after changing it.
 
 ## Install
@@ -53,12 +53,12 @@ Needs Python 3.10 or newer, and Google Chrome for the panel tools.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip spotify-manager-mcp-1.2.3.zip -d ~/vibedna/spotify-manager
+   unzip spotify-manager-mcp-1.2.4.zip -d ~/vibedna/spotify-manager
    cd ~/vibedna/spotify-manager/spotify-manager-mcp
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive spotify-manager-mcp-1.2.3.zip -DestinationPath "$env:USERPROFILE\vibedna\spotify-manager"
+   Expand-Archive spotify-manager-mcp-1.2.4.zip -DestinationPath "$env:USERPROFILE\vibedna\spotify-manager"
    cd "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp"
    ```
 

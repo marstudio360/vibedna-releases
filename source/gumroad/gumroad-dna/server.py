@@ -1,5 +1,5 @@
 """
-GumroadDNA: a VibeDNA MCP server
+GumroadDNA: a Vibedna MCP server
 Complete headless Gumroad control via the Gumroad API v2 (no browser). 44 tools:
 - Products: create + upload (multipart-S3) + cover/thumbnail + publish + archive + download
 - Sales: list individual sales, view, refund (full/partial), resend receipt, mark shipped
@@ -7,10 +7,11 @@ Complete headless Gumroad control via the Gumroad API v2 (no browser). 44 tools:
 - Licenses: verify / enable / disable / decrement uses
 - Discounts: list / create / delete offer codes
 - Custom fields, webhooks (resource subscriptions), account
-- Plus VibeDNA extras: niche/market research, buyer -> Resend sync, unlisted-asset scan
+- Plus Vibedna extras: niche/market research, buyer -> Resend sync, unlisted-asset scan
 """
 
 import os
+import hmac
 import base64
 import hashlib
 import mimetypes
@@ -27,7 +28,7 @@ BASE_URL = "https://api.gumroad.com/v2"
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "2.3.3"
+VERSION = "2.3.4"
 PRODUCT_SLUG = "gumroad"
 
 
@@ -593,11 +594,11 @@ def bump_stock(buffer: int = 5, dry_run: bool = False) -> str:
 
 @mcp.tool()
 def vibedna_info() -> dict:
-    """Product info - VibeDNA build, version, license, support."""
+    """Product info - Vibedna build, version, license, support."""
     return {
         "product": "gumroad-dna",
         "display_name": "GumroadDNA",
-        "vendor": "VibeDNA",
+        "vendor": "Vibedna",
         "version": VERSION,
         "tools": 44,
         "site": "https://vibedna.ai/store",
@@ -1099,12 +1100,71 @@ def get_account() -> str:
         return f"Error: {e}"
 
 
+def _require_bearer(app, token: str):
+    """Wrap a web (ASGI) app so every request must carry 'Authorization: Bearer <token>'.
+
+    A request without exactly that header gets a 401 and never reaches the app behind
+    it, so no tool runs. Start-up and shutdown events (lifespan) are not requests and
+    pass through.
+    """
+    expected = b"Bearer " + token.encode("utf-8")
+
+    async def guarded(scope, receive, send):
+        if scope["type"] not in ("http", "websocket"):
+            await app(scope, receive, send)
+            return
+        sent = [v for k, v in (scope.get("headers") or []) if k.lower() == b"authorization"]
+        if len(sent) == 1 and hmac.compare_digest(sent[0], expected):
+            await app(scope, receive, send)
+            return
+        if scope["type"] == "websocket":
+            await send({"type": "websocket.close", "code": 1008})
+            return
+        body = b'{"error": "unauthorized", "hint": "send the header Authorization: Bearer <MCP_HTTP_TOKEN>"}'
+        await send({"type": "http.response.start", "status": 401, "headers": [
+            (b"content-type", b"application/json"),
+            (b"content-length", str(len(body)).encode("ascii")),
+            (b"www-authenticate", b"Bearer"),
+        ]})
+        await send({"type": "http.response.body", "body": body})
+
+    return guarded
+
+
+def _http_plan(app, env):
+    """Decide how the web mode (PORT is set) starts, without starting anything.
+
+    Returns (app, host, port). With MCP_HTTP_TOKEN set, app only answers requests that
+    carry the token. With it empty the web mode does not start, unless MCP_HTTP_OPEN=1
+    says a login of your own already sits in front of it. It listens on this machine
+    only (127.0.0.1) unless MCP_HOST or HOST names another address.
+    """
+    token = (env.get("MCP_HTTP_TOKEN") or "").strip()
+    host = (env.get("MCP_HOST") or env.get("HOST") or "").strip() or "127.0.0.1"
+    if token:
+        return _require_bearer(app, token), host, int(env["PORT"])
+    if (env.get("MCP_HTTP_OPEN") or "").strip() == "1":
+        import sys
+        print("[gumroad-dna] Web mode is starting WITHOUT a token because MCP_HTTP_OPEN=1: "
+              "anyone who can reach this port can use every tool on your store.", file=sys.stderr)
+        return app, host, int(env["PORT"])
+    raise SystemExit(
+        "[gumroad-dna] Web mode was asked for (PORT is set) but did not start: MCP_HTTP_TOKEN "
+        "is empty, and without it anyone who can reach that port could use every tool on "
+        "your store. Set MCP_HTTP_TOKEN to a long random text and start again; clients must "
+        "then send the header 'Authorization: Bearer <that text>'. (Only if a login of your "
+        "own already sits in front of this port: MCP_HTTP_OPEN=1 starts it without a token.)"
+    )
+
+
 if __name__ == "__main__":
     # stdio by default, which is what local MCP clients (Claude Code, Cursor, Claude
     # Desktop) speak. Streamable HTTP only when PORT is set, for hosting. The HTTP mode
-    # has no authentication of its own: set HOST=127.0.0.1 to keep it on this machine.
+    # needs MCP_HTTP_TOKEN (every request must carry it) and stays on this machine
+    # unless MCP_HOST or HOST names another address.
     if os.getenv("PORT"):
+        _app, _host, _port = _http_plan(mcp.streamable_http_app(), os.environ)
         import uvicorn
-        uvicorn.run(mcp.streamable_http_app(), host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT")))
+        uvicorn.run(_app, host=_host, port=_port)
     else:
         mcp.run()

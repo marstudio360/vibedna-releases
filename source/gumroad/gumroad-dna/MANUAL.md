@@ -112,4 +112,4 @@ admin@vibedna.ai · https://vibedna.ai/store/gumroad
 
 License: MIT.
 
-VibeDNA, 2026
+Vibedna, 2026

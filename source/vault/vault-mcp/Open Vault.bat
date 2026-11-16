@@ -1,6 +1,6 @@
 @echo off
-REM Doble click y se abre tu vault. Busca el python del entorno del propio paquete y,
-REM si no esta, el del sistema: un comprador no tiene por que saber cual es cual.
+REM Double click and your vault opens. It looks for the Python of the package's own environment
+REM and, if it is not there, the system one: a buyer does not need to know which is which.
 cd /d "%~dp0"
 if exist ".venv\Scripts\pythonw.exe" (
   start "" ".venv\Scripts\pythonw.exe" "vault_ui.py"
