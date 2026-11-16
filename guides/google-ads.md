@@ -1,28 +1,28 @@
 ---
 name: google-ads-dna-install
-description: Install Google Ads DNA, the MCP server that lets your AI read and run your own Google Ads account. Paste this file into your AI chat: it checks the zip, reads the code, waits for your yes and installs it. You run the register line yourself, so your Google keys never pass through the chat.
+description: Install Google Ads DNA, the MCP server that lets your AI read and run your own Google Ads account. Paste this file into your AI chat: it checks the zip, reads the code, waits for your yes and installs it. You run the register line yourself, so your Google keys and your licence key never pass through the chat.
 ---
 
 # Google Ads DNA: Install Guide
 
-This guide matches version 1.0.6.
+This guide matches version 1.0.7.
 
-> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key, secret or password in the chat. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (the Google Cloud steps, connecting your Google account, the tools, safety): where it differs (bare `pip`, system `python`, local scope), follow this guide; its Google Cloud steps still apply. Before any change to the account, name the campaign, old value and new value, and wait for a yes. The three tools that change the account also refuse until they are called with that yes (`confirm=True`, or `owner_said_yes=True` on `set_campaign_status`): pass it only after the person said yes to that exact change, never on your own.
+> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and `license_gate.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key, secret or password in the chat. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (the Google Cloud steps, connecting your Google account, the tools, safety): where it differs (bare `pip`, system `python`, local scope), follow this guide; its Google Cloud steps still apply. Before any change to the account, name the campaign, old value and new value, and wait for a yes. The three tools that change the account also refuse until they are called with that yes (`confirm=True`, or `owner_said_yes=True` on `set_campaign_status`): pass it only after the person said yes to that exact change, never on your own.
 
 ## What it is
 
-Your AI works on your own Google Ads account: campaign results, custom reports, audience interests, new YouTube video campaigns (Google's Demand Gen type), daily budgets, and pause, turn on or remove. 11 tools. It uses your own Google Ads API access (a Google Cloud project you set up once).
+Your AI works on your own Google Ads account: campaign results, custom reports, audience interests, new YouTube video campaigns (Google's Demand Gen type), daily budgets, and pause, turn on or remove. 11 tools, all of which need your Vibedna licence key. It uses your own Google Ads API access (a Google Cloud project you set up once).
 
 ## Trust box
 
-- **File:** `google-ads-dna-1.0.6.zip`, 21,346 bytes, 5 files, one folder `google-ads-dna/`.
-- **SHA-256:** `2e9ddcc54cc35e5aaea2239f47014ea3279d149b786005fe693036920bdc3e9b`
-  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.6.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.6.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.6.zip` (capitals are fine). Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `google-ads-dna-1.0.7.zip`, 27,084 bytes, 6 files, one folder `google-ads-dna/`; `license_gate.py` is the licence check.
+- **SHA-256:** `11790da36693b907d90bf21a953855380194b52dfb99234fa1d730f24b6a6664`
+  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.7.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.7.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.7.zip` (capitals are fine). Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.7.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies:** 2, pinned to exact tested versions: `mcp==1.30.0`, `httpx==0.28.1`.
-- **Reads from the environment:** `GOOGLE_ADS_CLIENT_ID` and `GOOGLE_ADS_CLIENT_SECRET` (required). Optional: `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_MAX_DAILY_BUDGET`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN` (only for older setups that still use a developer token: a new setup needs none, and none is built into the code), `GOOGLE_ADS_API_VERSION`, `GOOGLE_ADS_DNA_HOME`, `GOOGLE_ADS_ASK` (`0` turns off the question before each change).
-- **Writes:** `~/.google-ads-dna/credentials.json` (client id, client secret and Google refresh token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.google-ads-dna/actions.jsonl` (one line per change made).
-- **Network:** `googleads.googleapis.com` (your account) and `oauth2.googleapis.com` (sign-in tokens); a logo given as a web link is downloaded. To approve, you open an `accounts.google.com` link while it listens on `127.0.0.1` (random port) for Google's answer. `server.py` calls only the hosts named here, none of them vibedna.ai (the `www.googleapis.com/auth/adwords` text in it is the name of the permission it asks Google for, not a call); your AI can confirm it by listing every URL in the file.
+- **Reads from the environment:** `MCPIZE_LICENSE_KEY` (your Vibedna licence key), `GOOGLE_ADS_CLIENT_ID` and `GOOGLE_ADS_CLIENT_SECRET` (all three required). Optional: `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_MAX_DAILY_BUDGET`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN` (only for older setups that still use a developer token: a new setup needs none, and none is built into the code), `GOOGLE_ADS_API_VERSION`, `GOOGLE_ADS_DNA_HOME`, `GOOGLE_ADS_ASK` (`0` turns off the question before each change), `VIBEDNA_HOME` (moves the licence permit file). `license_gate.py` also reads `VIBEDNA_PRODUCT_SLUG` and `VIBEDNA_PRODUCT_NAME`, which change nothing here: `server.py` passes its own product name.
+- **Writes:** `~/.google-ads-dna/credentials.json` (client id, client secret and Google refresh token, plain JSON; owner-only on macOS and Linux, not on Windows), `~/.google-ads-dna/actions.jsonl` (one line per change made) and `~/.vibedna/license_permits.json` (the signed licence permit from vibedna.ai and when it was asked; not your key, only a short one-way hash of it; in the `VIBEDNA_HOME` folder if set).
+- **Network:** `googleads.googleapis.com` (your account) and `oauth2.googleapis.com` (sign-in tokens); a logo given as a web link is downloaded. To approve, you open an `accounts.google.com` link while it listens on `127.0.0.1` (random port) for Google's answer. `server.py` calls only the hosts named here (the `www.googleapis.com/auth/adwords` text in it is the name of the permission it asks Google for, and the vibedna.ai links in its licence message are text shown to you, not calls); your AI can confirm it by listing every URL in the file. `license_gate.py`, which `server.py` loads, makes one more call: it asks `https://vibedna.ai/api/license/validate` (HTTPS POST) when a tool first runs, then again every 12 hours while the machine is online. It sends your licence key, the product name and a 16 character machine id (a one-way hash made from the computer's name, system and network card number; it cannot be read back), nothing else, and nothing about your ads account. The site answers with a signed permit that `license_gate.py` checks with the public key it carries. Offline, the tools keep working until that permit expires: about three days for a key that lives on a subscription, about a year for a key bought once.
 - **Never touches:** your other files, except a local logo image you name for a campaign.
 
 The hash proves this is the file the guide was measured from, not who made it or what the code does. That is why your AI reads the code first.
@@ -39,6 +39,7 @@ Safety in the code, and its limits:
 
 They go into the step 4 line, which you run yourself.
 
+- **Licence key** (required): your Vibedna licence key, set as `MCPIZE_LICENSE_KEY`. It starts with `vbd_` and is in your purchase email from Vibedna; with a membership it is in the email that welcomed you to the plan, and it works while the plan is active. You type it into the step 4 line in your own terminal, never in the chat.
 - **Client id and client secret** (required). You create them once in your own Google Cloud account. The tool's own messages and the start prompt call this "INSTALL.md step 2"; these are the steps (`MANUAL.md` step 2 has the same ones):
   1. At console.cloud.google.com create a project (any name).
   2. APIs and services, Library: search "Google Ads API" and enable it.
@@ -47,15 +48,15 @@ They go into the step 4 line, which you run yourself.
   5. APIs and services, Credentials, Create credentials, OAuth client ID, type Desktop app. Copy the client id and the client secret: they go into the step 4 line below, typed by you in your own terminal, never in the chat.
 - **Account id** (optional): the 10-digit number at the top right of ads.google.com. Without it, each call must name the account.
 
-You sign in to Google in your browser; the refresh token goes to `credentials.json`, never to the chat. Never type the id or secret into the chat.
+You sign in to Google in your browser; the refresh token goes to `credentials.json`, never to the chat. Never type the licence key, id or secret into the chat.
 
 ## Install
 
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (rename an existing `google-ads-dna` folder first). You get `~/vibedna/google-ads-dna` or `C:\Users\<you>\vibedna\google-ads-dna`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.6.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.6.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.7.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.7.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`
@@ -64,11 +65,11 @@ Needs Python 3.10 or newer.
 
    macOS/Linux:
    ```
-   claude mcp add google-ads-dna -s user -e GOOGLE_ADS_CLIENT_ID=YOUR_CLIENT_ID -e GOOGLE_ADS_CLIENT_SECRET=YOUR_CLIENT_SECRET -e GOOGLE_ADS_CUSTOMER_ID=YOUR_ACCOUNT_ID -- "$HOME/vibedna/google-ads-dna/.venv/bin/python" "$HOME/vibedna/google-ads-dna/server.py"
+   claude mcp add google-ads-dna -s user -e MCPIZE_LICENSE_KEY=YOUR_LICENCE_KEY -e GOOGLE_ADS_CLIENT_ID=YOUR_CLIENT_ID -e GOOGLE_ADS_CLIENT_SECRET=YOUR_CLIENT_SECRET -e GOOGLE_ADS_CUSTOMER_ID=YOUR_ACCOUNT_ID -- "$HOME/vibedna/google-ads-dna/.venv/bin/python" "$HOME/vibedna/google-ads-dna/server.py"
    ```
    Windows:
    ```
-   claude mcp add google-ads-dna -s user -e GOOGLE_ADS_CLIENT_ID=YOUR_CLIENT_ID -e GOOGLE_ADS_CLIENT_SECRET=YOUR_CLIENT_SECRET -e GOOGLE_ADS_CUSTOMER_ID=YOUR_ACCOUNT_ID "--" "C:\Users\<you>\vibedna\google-ads-dna\.venv\Scripts\python.exe" "C:\Users\<you>\vibedna\google-ads-dna\server.py"
+   claude mcp add google-ads-dna -s user -e MCPIZE_LICENSE_KEY=YOUR_LICENCE_KEY -e GOOGLE_ADS_CLIENT_ID=YOUR_CLIENT_ID -e GOOGLE_ADS_CLIENT_SECRET=YOUR_CLIENT_SECRET -e GOOGLE_ADS_CUSTOMER_ID=YOUR_ACCOUNT_ID "--" "C:\Users\<you>\vibedna\google-ads-dna\.venv\Scripts\python.exe" "C:\Users\<you>\vibedna\google-ads-dna\server.py"
    ```
    On Windows keep the quotes around `--` (PowerShell can drop it and the line fails) and use `C:\` paths, never `/c/...`. The line stays in your shell history; Claude Code stores the values as plain text.
 5. Other MCP apps, in their MCP settings, with the values typed by you (the account id is optional) (on Windows, the step 4 paths with doubled backslashes):
@@ -76,7 +77,7 @@ Needs Python 3.10 or newer.
    { "mcpServers": { "google-ads-dna": {
      "command": "/Users/<you>/vibedna/google-ads-dna/.venv/bin/python",
      "args": ["/Users/<you>/vibedna/google-ads-dna/server.py"],
-     "env": { "GOOGLE_ADS_CLIENT_ID": "", "GOOGLE_ADS_CLIENT_SECRET": "", "GOOGLE_ADS_CUSTOMER_ID": "" } } } }
+     "env": { "MCPIZE_LICENSE_KEY": "", "GOOGLE_ADS_CLIENT_ID": "", "GOOGLE_ADS_CLIENT_SECRET": "", "GOOGLE_ADS_CUSTOMER_ID": "" } } } }
    ```
 6. Coming from an earlier install: the older install steps registered it with `-s local`, and a hand-made `.mcp.json` entry may exist; either can keep an old copy running. Check with `claude mcp get google-ads-dna`. If it shows another path or scope, run `claude mcp remove google-ads-dna -s local` (or `-s project`) from that folder, or delete its block from that file.
 7. Restart Claude Code (close it, open a new session).
@@ -85,7 +86,8 @@ Needs Python 3.10 or newer.
 ## Check it works
 
 1. `claude mcp get google-ads-dna` shows it connected and running the `.venv` Python.
-2. Ask your AI to call `setup_status`. It works with no key set and shows `configured` as true or false per item, never the values. After step 8 it adds `"connected": true` and your account ids.
+2. Ask your AI to call `setup_status`. With your licence key in the entry it works before any Google value is set, and shows `configured` as true or false per item, never the values. After step 8 it adds `"connected": true` and your account ids.
+3. Without a valid key, every tool answers only with an error that starts "Google Ads DNA needs a valid licence key" and says where to put it.
 
 ## Start prompt
 
@@ -96,6 +98,7 @@ After installing, paste the start prompt into your AI: `START_PROMPT.md` in the 
 1. `claude mcp remove google-ads-dna -s user`
 2. Delete the unzipped `google-ads-dna` folder.
 3. Delete `~/.google-ads-dna/` (or the `GOOGLE_ADS_DNA_HOME` folder if set): your Google access and the change log.
+4. Delete `~/.vibedna/license_permits.json` (in the `VIBEDNA_HOME` folder if set), unless another Vibedna product still uses it.
 
 Delete nothing else. To cut access at Google too, remove the app under third-party access in your Google Account.
 
@@ -106,6 +109,7 @@ Delete nothing else. To cut access at Google too, remove the app under third-par
 - **Python older than 3.10:** install a newer one, delete `.venv`, repeat step 3.
 - **Still "Failed to connect" after that:** the entry does not run the `.venv` Python (you can check with `claude mcp get google-ads-dna`). Remove it and repeat step 4.
 - **`setup_status` shows `client_id` or `client_secret` false:** remove the entry, run the step 4 line again yourself, restart, then step 8.
+- **A tool answers "Google Ads DNA needs a valid licence key":** `MCPIZE_LICENSE_KEY` is missing or mistyped in the entry, or the computer could not reach vibedna.ai for the first check. Remove the entry, run the step 4 line again yourself, restart.
 - **Old tools or an old path still show:** an old entry is still registered. See step 6.
 
 Support: admin@vibedna.ai

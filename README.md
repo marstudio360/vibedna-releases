@@ -31,22 +31,24 @@ paid tools, read the code in your own copy first, which is what each install gui
 |---|---|---|---|---|
 | ai-company-system | `ai-company-system-1.0.3.zip` | 328,890 | 88 | no (paid tool): checksums and file list only |
 | content-studio | `social-content-studio-mcp-1.3.7.zip` | 102,701 | 11 | yes, in `source/content-studio/` |
-| cover-studio | `cover-studio-mcp-1.1.5.zip` | 71,757 | 13 | no (paid tool): checksums and file list only |
-| ebook-forge | `ebook-forge-mcp-1.2.4.zip` | 230,129 | 62 | no (paid tool): checksums and file list only |
+| cover-studio | `cover-studio-mcp-1.1.6.zip` | 77,761 | 14 | no (paid tool): checksums and file list only |
+| ebook-forge | `ebook-forge-mcp-1.2.5.zip` | 232,128 | 62 | no (paid tool): checksums and file list only |
 | ebook-system | `Ebook-System-1.2.4.zip` | 255,346 | 64 | no (paid tool): checksums and file list only |
+| email-dna | `email-dna-2.0.3.zip` | 128,092 | 31 | no (paid tool): checksums and file list only |
 | game-assets | `game-assets-mcp-1.0.6.zip` | 61,803 | 15 | yes, in `source/game-assets/` |
-| godot | `godot-vibe-mcp-1.1.6.zip` | 64,608 | 6 | no (paid tool): checksums and file list only |
-| google-ads | `google-ads-dna-1.0.6.zip` | 21,346 | 5 | no (paid tool): checksums and file list only |
+| godot | `godot-vibe-mcp-1.1.7.zip` | 70,532 | 7 | no (paid tool): checksums and file list only |
+| google-ads | `google-ads-dna-1.0.7.zip` | 27,084 | 6 | no (paid tool): checksums and file list only |
 | gumroad | `gumroad-dna-2.3.4.zip` | 27,701 | 12 | yes, in `source/gumroad/` |
-| jester | `jester-mcp-1.0.8.zip` | 165,336 | 50 | no (paid tool): checksums and file list only |
+| jester | `jester-mcp-1.0.9.zip` | 168,502 | 51 | no (paid tool): checksums and file list only |
+| measure-dna | `measure-dna-1.2.2.zip` | 42,009 | 6 | no (paid tool): checksums and file list only |
 | post-engine | `post-engine-1.0.2.zip` | 13,749 | 4 | no (paid tool): checksums and file list only |
 | social-brain | `social-brain-mcp-1.12.7.zip` | 623,753 | 37 | no (paid tool): checksums and file list only |
-| spotify-manager | `spotify-manager-mcp-1.2.4.zip` | 51,684 | 10 | no (paid tool): checksums and file list only |
+| spotify-manager | `spotify-manager-mcp-1.2.5.zip` | 57,796 | 11 | no (paid tool): checksums and file list only |
 | unity | `unity-vibe-mcp-1.0.4.zip` | 38,763 | 5 | no (paid tool): checksums and file list only |
 | unreal | `unreal-vibe-mcp-1.0.4.zip` | 29,708 | 5 | no (paid tool): checksums and file list only |
 | vault | `vault-mcp-1.1.6.zip` | 28,006 | 10 | yes, in `source/vault/` |
 | vibegen | `vibegen-mcp-1.1.3.zip` | 18,389 | 5 | yes, in `source/vibegen/` |
-| viz-studio | `viz-studio-mcp-1.1.4.zip` | 35,470 | 7 | no (paid tool): checksums and file list only |
-| youtubedna | `youtubedna-mcp-1.0.7.zip` | 33,124 | 6 | no (paid tool): checksums and file list only |
+| viz-studio | `viz-studio-mcp-1.1.5.zip` | 41,500 | 8 | no (paid tool): checksums and file list only |
+| youtubedna | `youtubedna-mcp-1.0.8.zip` | 35,165 | 6 | no (paid tool): checksums and file list only |
 
 Support: admin@vibedna.ai

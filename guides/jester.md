@@ -5,7 +5,7 @@ description: Install Vibedna Jester, a research MCP server that searches many pu
 
 # Jester: Install Guide
 
-This guide matches version 1.0.8.
+This guide matches version 1.0.9.
 
 > **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do, including the background process. Ask before anything is written. Never ask for a key or password in the chat or print `.env`. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (updating, optional extras): where it differs (keys collected in the chat, bare `pip`, an entry written by hand, "no background process"), follow this guide.
 
@@ -15,15 +15,15 @@ One question from your AI goes out to many public sources at once (web, Reddit, 
 
 ## Trust box
 
-- **File:** `jester-mcp-1.0.8.zip`, 165,336 bytes, 50 files, one folder `jester-mcp/`.
-- **SHA-256:** `cbf5927119a34f62d45b8b227419d33e08472dff403708c9ecc9ccec0e8eb823`
-  Check before unzipping. Linux: `sha256sum jester-mcp-1.0.8.zip`. macOS: `shasum -a 256 jester-mcp-1.0.8.zip`. Windows PowerShell: `Get-FileHash jester-mcp-1.0.8.zip`. Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/jester-mcp-1.0.8.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `jester-mcp-1.0.9.zip`, 168,502 bytes, 51 files, one folder `jester-mcp/`.
+- **SHA-256:** `1164ecbb00ebc55c4a95c66e01d2204485fce4678f38ac3a2a370efeae61adb0`
+  Check before unzipping. Linux: `sha256sum jester-mcp-1.0.9.zip`. macOS: `shasum -a 256 jester-mcp-1.0.9.zip`. Windows PowerShell: `Get-FileHash jester-mcp-1.0.9.zip`. Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/jester-mcp-1.0.9.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies:** 13, held to tested versions (exact, or a range where shown): `fastmcp>=0.2,<5`, `anthropic==2.8.0`, `exa-py==2.28.0`, `ddgs==9.16.1`, `python-dotenv==1.2.4`, `youtube-transcript-api==1.2.5`, `firecrawl-py==4.57.0`, `rich==15.0.0`, `numpy>=1.24,<3`, `model2vec==0.10.0`, `trafilatura==2.3.1`, `pytrends==4.9.2`, `pypdf==7.1.0`. Audio and video tools also need `yt-dlp`, `ffmpeg` and `faster-whisper`, not installed here. Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
 - **Background process:** `server.py` starts `jester-daemon.py`, which stays running on `127.0.0.1:7843` and stops after 30 minutes without use. It listens on this computer only and answers only requests that carry its access token: a random secret it writes to `~/.jester/daemon.token` on first start (owner-only on macOS and Linux, not on Windows), which `server.py` reads by itself. A program running as you can read that file, so the token keeps out web pages and other users of the computer, not your own programs. Never set `PORT`: it moves the background process to a port where `server.py` does not look for it. Leave `JESTER_TRANSPORT` unset: it starts a web mode of `server.py` that this install does not use, and that mode refuses to start unless `MCP_HTTP_TOKEN` is set (or `MCP_HTTP_OPEN=1`, which serves every tool to whoever reaches the port).
-- **Reads from the environment or `.env`:** the keys below, `JESTER_HOME` (data folder), `JESTER_DAILY_LIMIT` and `JESTER_MONTHLY_LIMIT` (spend caps, default 1.00 and 20.00). It also loads a `.env` from the folder it is started in.
-- **Writes:** `~/.jester/` (reports, caches, index databases, spend log, logs, a small search model, a cache holding your licence key, the background process's access token `daemon.token`) and temporary download files.
-- **Network:** the sources it searches (DuckDuckGo, Hacker News, GitHub, arXiv, Google News and Trends, YouTube, Substack and others named in `jester/jester.py` and `jester/sources/`; a search of the code, not a promise); pages you ask it to read (`fetch_url` goes through `r.jina.ai`); one model download (`minishlab/potion-base-8M`); `vibedna.ai` for the licence check (sends your licence key) and `check_for_update`; Anthropic, Exa, Firecrawl, Listen Notes and the Twitter API only with their keys.
+- **Reads from the environment or `.env`:** the keys below, `JESTER_HOME` (data folder), `VIBEDNA_HOME` (folder of the licence permit, default `~/.vibedna`), `JESTER_DAILY_LIMIT` and `JESTER_MONTHLY_LIMIT` (spend caps, default 1.00 and 20.00). It also loads a `.env` from the folder it is started in.
+- **Writes:** `~/.jester/` (reports, caches, index databases, spend log, logs, a small search model, the background process's access token `daemon.token`) and temporary download files; `~/.vibedna/license_permits.json` (the signed licence permit and when it was last asked; it holds a short hash of your key, never the key itself; under `VIBEDNA_HOME` if set).
+- **Network:** the sources it searches (DuckDuckGo, Hacker News, GitHub, arXiv, Google News and Trends, YouTube, Substack and others named in `jester/jester.py` and `jester/sources/`; a search of the code, not a promise); pages you ask it to read (`fetch_url` goes through `r.jina.ai`); one model download (`minishlab/potion-base-8M`); `vibedna.ai` for the licence check in `jester/license_gate.py` (sends your licence key, the product name and a 16 character machine id, a one-way hash made from the computer's name, system and network card number that cannot be read back; the site answers with a signed permit, asked again when a tool checks the key and the last answer is over 12 hours old; offline the Pro tools keep working until the permit expires, about three days on a subscription key and about a year on a key bought once) and `check_for_update`; Anthropic, Exa, Firecrawl, Listen Notes and the Twitter API only with their keys.
 - **Never touches:** your other files, except a PDF or image you name for `read_pdf` or `fetch_image`.
 
 The hash proves this is the file the guide was measured from, not who made it or what the code does. That is why your AI reads the code first.
@@ -32,7 +32,7 @@ The hash proves this is the file the guide was measured from, not who made it or
 
 All optional, typed by you into `.env` next to `server.py` (step 4; not `.env.local`, which the code does not read). Keys can cost money on your own accounts; `get_budget` shows the spend.
 
-- `MCPIZE_LICENSE_KEY`: your licence key (starts with `vbd_`, in your purchase email and at vibedna.ai/library). It unlocks `watch_topic`, `crawl_url`, `scan_competitor` and more sources per search.
+- `MCPIZE_LICENSE_KEY`: your licence key (starts with `vbd_`, in your purchase email; with a membership, in the email that welcomed you to the plan). It unlocks `watch_topic`, `crawl_url`, `scan_competitor` and more sources per search.
 - `ANTHROPIC_API_KEY`: lets Jester write the analysis itself; without it your chat AI does.
 - `EXA_API_KEY`, `FIRECRAWL_API_KEY` (needed by `crawl_url`), `LISTENNOTES_API_KEY`, `TWITTER_BEARER_TOKEN`, `QIITA_ACCESS_TOKEN`: extra search, page crawl, podcast and social sources.
 
@@ -41,8 +41,8 @@ All optional, typed by you into `.env` next to `server.py` (step 4; not `.env.lo
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (if `jester-mcp` exists, stop the background process as in Uninstall and rename it). You get `~/vibedna/jester-mcp` or `C:\Users\<you>\vibedna\jester-mcp`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip jester-mcp-1.0.8.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive jester-mcp-1.0.8.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip jester-mcp-1.0.9.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive jester-mcp-1.0.9.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`
@@ -81,6 +81,7 @@ After installing, paste the start prompt into your AI: `START_PROMPT.md` in the 
    - Windows PowerShell: `Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Where-Object { $_.CommandLine -like '*jester-daemon*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }`
 3. Delete the unzipped `jester-mcp` folder (your `.env` is inside).
 4. Delete `~/.jester/` (or the `JESTER_HOME` folder if set): your saved research.
+5. Delete `~/.vibedna/license_permits.json` (in the `VIBEDNA_HOME` folder if set).
 
 Delete nothing else.
 

@@ -1,31 +1,31 @@
 ---
 name: spotify-manager-install
-description: Install Spotify Manager MCP, the server that lets your AI read your Spotify for Artists numbers, draft editorial pitches and manage your own playlists. Paste this file into your AI chat: it checks the zip, reads the code, waits for your yes and installs it. Your Spotify values go in the tool's own config file, which you fill in yourself.
+description: Install Spotify Manager MCP, the server that lets your AI read your Spotify for Artists numbers, draft editorial pitches and manage your own playlists. Paste this file into your AI chat: it checks the zip, reads the code, waits for your yes and installs it. Your Spotify values go in the tool's own config file and your Vibedna licence key in the register line, both typed by you, never in the chat.
 ---
 
 # Spotify Manager MCP: Install Guide
 
-This guide matches version 1.2.4.
+This guide matches version 1.2.5.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 10 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the other `.py` files it loads (`session.py`, `web_api.py`, `s4a.py`, `pitch.py`, `pitch_queue.py`), and say in plain words what they do. Ask before anything is written. Never ask for a key, token or password in the chat; never open or print `config.json` or `session.json`. Ask again before any tool that changes a playlist or the artist profile, and before `authorize_account`: it opens Spotify's consent page in the browser and saves a token to `config.json` (its answer does not show the token).
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` runs, list the 11 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the other `.py` files it loads (`session.py`, `web_api.py`, `s4a.py`, `pitch.py`, `pitch_queue.py`, `license_gate.py`), and say in plain words what they do. Ask before anything is written. Never ask for a key, token or password in the chat; never open or print `config.json` or `session.json`. Ask again before any tool that changes a playlist or the artist profile, and before `authorize_account`: it opens Spotify's consent page in the browser and saves a token to `config.json` (its answer does not show the token).
 
 ## What it is
 
-A Python MCP server that runs on your computer. Your AI reads your Spotify for Artists panel (followers, listeners, streams, audience, what each release still needs), drafts the text of an editorial pitch, searches the catalog and manages your own playlists. 27 tools. It writes pitches; it does not submit them.
+A Python MCP server that runs on your computer. Your AI reads your Spotify for Artists panel (followers, listeners, streams, audience, what each release still needs), drafts the text of an editorial pitch, searches the catalog and manages your own playlists. 27 tools, every one locked without your licence key. It writes pitches; it does not submit them.
 
 ## Trust box
 
-- **File:** `spotify-manager-mcp-1.2.4.zip`, 51,684 bytes, 10 files, all inside one `spotify-manager-mcp/` folder.
-- **SHA-256:** `ed36dd746bbb40fcc80c1fb56d067f18aea3cc83e026813ec94466ccb11a9ab2`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum spotify-manager-mcp-1.2.4.zip`
-  - macOS: `shasum -a 256 spotify-manager-mcp-1.2.4.zip`
-  - Windows PowerShell: `Get-FileHash spotify-manager-mcp-1.2.4.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/spotify-manager-mcp-1.2.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `spotify-manager-mcp-1.2.5.zip`, 57,796 bytes, 11 files, all inside one `spotify-manager-mcp/` folder.
+- **SHA-256:** `df2bf0e0ba356e8e036d59d1fda65d7e267c881edb2c666d29760a6f84e3142e`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum spotify-manager-mcp-1.2.5.zip`
+  - macOS: `shasum -a 256 spotify-manager-mcp-1.2.5.zip`
+  - Windows PowerShell: `Get-FileHash spotify-manager-mcp-1.2.5.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/spotify-manager-mcp-1.2.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Documents in the zip:** `INSTALL.md` in the zip is this guide (the same text as https://vibedna.ai/installs/spotify-manager.md without the zip's own size and checksum; if they ever differ, follow the online one). `MANUAL.md` is the product's own older document, kept for what this guide does not repeat (creating your Spotify app, what each tool needs, the pitching rules). Where it shows another way to install (a plain `pip install`, a settings entry written by hand with the keys in it), follow this guide. The zip holds no other document.
-- **Dependencies, pinned to exact tested versions:** `mcp==1.30.0`, `websockets==17.4`. `server.py` also tries to import `keyring` and `vault_core` (an optional password vault). They are not installed and not needed: the import sits inside a `try`, and without them values come from the environment or the config file.
-- **Settings it reads, all optional:** the account values `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` (search, public catalog, playlists), `SPOTIFY_REFRESH_TOKEN` (your playlists), `SPOTIFY_ARTIST_ID` (default artist; `label_status` needs it) and `SPOTIFY_REDIRECT_URI`; for the browser `SPOTIFY_MANAGER_CHROME`, `_PROFILE`, `_PORT`, `_BROWSER_HOME`, `_BROWSER_PORT`; for the vault `SPOTIFY_MANAGER_VAULT_PATH`, `_VAULT_SERVICE`, `_VAULT_ENTRY`, `VAULT_MASTER_PASSWORD`; the fallbacks `SPOTIFY_SP_DC`, `SPOTIFY_SP_KEY`, `SPOTIFY_S4A_BEARER`. All are read from the environment; the account values also from `~/.spotify-manager/config.json`.
-- **Files it writes:** `~/.spotify-manager/session.json` (your Spotify session cookies and a short-lived panel token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.spotify-manager/chrome-profile/` (the profile of the Chrome it starts, or the `SPOTIFY_MANAGER_PROFILE` folder). `authorize_account` writes the refresh token into `~/.spotify-manager/config.json` and keeps the other values in it (owner-only on macOS and Linux, not on Windows); if that file cannot be written, the token goes to `~/.spotify-manager/refresh_token.txt` and the tool's answer names that path. Nothing else writes `config.json`.
-- **Network:** `api.spotify.com` (catalog, search, playlists); `accounts.spotify.com` (app tokens, and the consent page `authorize_account` opens in your browser); `artists.spotify.com` (panel reads with your session cookie; the page its Chrome opens to get the panel token); `generic.wg.spotify.com` (audience analytics and `set_artist_pick`). On your own machine: `127.0.0.1` ports 9222 to 9226, 9231 and 9234 (looking for a Chrome with remote debugging) and `127.0.0.1:8888` (listening up to two minutes for Spotify's answer during `authorize_account`). `developer.spotify.com` is only text in an error message. Nothing goes to vibedna.ai. pypi.org is contacted once, by `pip`, at install.
+- **Dependencies, pinned to exact tested versions:** `mcp==1.30.0`, `websockets==17.4`; the licence check (`license_gate.py`) uses only Python's standard library. `server.py` also tries to import `keyring` and `vault_core` (an optional password vault). They are not installed and not needed: the import sits inside a `try`, and without them values come from the environment or the config file.
+- **Settings it reads:** `MCPIZE_LICENSE_KEY` (required, your licence key, from the environment only: see Keys) and, optional, `VIBEDNA_HOME` (moves the licence permit file; `license_gate.py` also reads `VIBEDNA_PRODUCT_SLUG` and `VIBEDNA_PRODUCT_NAME`, which change nothing in this product). All others are optional: the account values `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` (search, public catalog, playlists), `SPOTIFY_REFRESH_TOKEN` (your playlists), `SPOTIFY_ARTIST_ID` (default artist; `label_status` needs it) and `SPOTIFY_REDIRECT_URI`; for the browser `SPOTIFY_MANAGER_CHROME`, `_PROFILE`, `_PORT`, `_BROWSER_HOME`, `_BROWSER_PORT`; for the vault `SPOTIFY_MANAGER_VAULT_PATH`, `_VAULT_SERVICE`, `_VAULT_ENTRY`, `VAULT_MASTER_PASSWORD`; the fallbacks `SPOTIFY_SP_DC`, `SPOTIFY_SP_KEY`, `SPOTIFY_S4A_BEARER`. All are read from the environment; the account values also from `~/.spotify-manager/config.json`.
+- **Files it writes:** `~/.spotify-manager/session.json` (your Spotify session cookies and a short-lived panel token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.spotify-manager/chrome-profile/` (the profile of the Chrome it starts, or the `SPOTIFY_MANAGER_PROFILE` folder). `authorize_account` writes the refresh token into `~/.spotify-manager/config.json` and keeps the other values in it (owner-only on macOS and Linux, not on Windows); if that file cannot be written, the token goes to `~/.spotify-manager/refresh_token.txt` and the tool's answer names that path. Nothing else writes `config.json`. For the licence, `license_gate.py` writes `~/.vibedna/license_permits.json` (under `VIBEDNA_HOME` if set): the signed permit and when it was last asked, not the key itself (the permit holds only a short hash of it); owner-only on macOS and Linux.
+- **Network:** `api.spotify.com` (catalog, search, playlists); `accounts.spotify.com` (app tokens, and the consent page `authorize_account` opens in your browser); `artists.spotify.com` (panel reads with your session cookie; the page its Chrome opens to get the panel token); `generic.wg.spotify.com` (audience analytics and `set_artist_pick`). On your own machine: `127.0.0.1` ports 9222 to 9226, 9231 and 9234 (looking for a Chrome with remote debugging) and `127.0.0.1:8888` (listening up to two minutes for Spotify's answer during `authorize_account`). `developer.spotify.com` is only text in an error message. vibedna.ai for the licence check: an HTTPS POST to `https://vibedna.ai/api/license/validate` with your licence key, the product name (`spotify-manager`) and a 16-character machine id (a one-way hash of the computer's name, system and network card number; it cannot be read back), and nothing else: nothing about your Spotify account or music. It is made on the first tool call, then again on a tool call once 12 hours have passed, while the machine is online. With no key set, or one that does not start with `vbd_`, no call is made and the tools stay locked. The site answers with a signed permit, which `license_gate.py` checks with the public key it carries. Offline, the tools keep working until the permit expires: the site sets that, about three days for a membership key, about a year for a key bought once. pypi.org is contacted once, by `pip`, at install.
 - **The browser it starts:** when no Chrome answers on those ports, it starts your installed Google Chrome without a window, with debugging port 9234 open to this computer. It closes that Chrome when the read ends, whether the read worked or not. A Chrome it did not start (one already answering on those ports) is used and left open.
 - **Changes your account at once, with no confirmation step:** `create_playlist`, `add_to_playlist`, `remove_from_playlist`, `edit_playlist`, `set_playlist_cover` (uploads the JPEG you name) and `set_artist_pick` (pins a release on your public artist profile). `pitch_watch` with `act=True` submits nothing: it answers with an error text.
 - **Never:** it does not ask for or store your Spotify password, submits no pitch, publishes no music and spends no money.
@@ -34,7 +34,7 @@ A Python MCP server that runs on your computer. Your AI reads your Spotify for A
 
 ## Keys
 
-Every value goes in `~/.spotify-manager/config.json` (Windows: `C:\Users\<you>\.spotify-manager\config.json`). Your AI creates it with empty values, you fill it in an editor:
+Your licence key goes in the register line (below). Every Spotify value goes in `~/.spotify-manager/config.json` (Windows: `C:\Users\<you>\.spotify-manager\config.json`). Your AI creates it with empty values, you fill it in an editor:
 
 ```json
 { "SPOTIFY_CLIENT_ID": "", "SPOTIFY_CLIENT_SECRET": "", "SPOTIFY_REFRESH_TOKEN": "", "SPOTIFY_ARTIST_ID": "" }
@@ -43,6 +43,7 @@ Every value goes in `~/.spotify-manager/config.json` (Windows: `C:\Users\<you>\.
 - **Client id and secret:** from a free app you create at developer.spotify.com (`MANUAL.md` step 1; redirect URI exactly `http://127.0.0.1:8888/callback`).
 - **Refresh token:** only for playlists. Ask for `authorize_account` and accept in your browser. The tool saves the token to `config.json` itself and its answer does not show it, so it does not pass through the chat. It lasts 180 days: redo this about twice a year. If `SPOTIFY_REFRESH_TOKEN` is also set in the environment, that value wins and the tool's answer says so.
 - **Artist id:** the last part of `open.spotify.com/artist/<id>`. Restart Claude Code after changing it.
+- **Licence key** (`MCPIZE_LICENSE_KEY`, required): your Vibedna licence key, it starts with `vbd_`. Spotify Manager is not sold on its own: it comes with the AI Music Label System, whose buyers get one key per tool in their purchase email from Vibedna, and with the Ultra membership, whose key is in the email that welcomed you to the plan and works while the plan is active. Every tool needs it. It is read only from the environment, not from `config.json` and not from a `.env` file, so it goes in the register line as `-e MCPIZE_LICENSE_KEY=...` (step 2), which you run yourself in your own terminal, never in the chat.
 
 ## Install
 
@@ -53,12 +54,12 @@ Needs Python 3.10 or newer, and Google Chrome for the panel tools.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip spotify-manager-mcp-1.2.4.zip -d ~/vibedna/spotify-manager
+   unzip spotify-manager-mcp-1.2.5.zip -d ~/vibedna/spotify-manager
    cd ~/vibedna/spotify-manager/spotify-manager-mcp
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive spotify-manager-mcp-1.2.4.zip -DestinationPath "$env:USERPROFILE\vibedna\spotify-manager"
+   Expand-Archive spotify-manager-mcp-1.2.5.zip -DestinationPath "$env:USERPROFILE\vibedna\spotify-manager"
    cd "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp"
    ```
 
@@ -75,22 +76,24 @@ Needs Python 3.10 or newer, and Google Chrome for the panel tools.
    .venv\Scripts\python.exe -m pip install -r requirements.txt
    ```
 
-2. Register it in Claude Code at user scope, with full paths:
+2. You, in your own terminal: register it in Claude Code at user scope, with full paths and your licence key in place of `YOUR_LICENCE_KEY`:
 
    macOS/Linux:
    ```bash
-   claude mcp add spotify-manager -s user -- "$HOME/vibedna/spotify-manager/spotify-manager-mcp/.venv/bin/python" "$HOME/vibedna/spotify-manager/spotify-manager-mcp/server.py"
+   claude mcp add spotify-manager -s user -e MCPIZE_LICENSE_KEY=YOUR_LICENCE_KEY -- "$HOME/vibedna/spotify-manager/spotify-manager-mcp/.venv/bin/python" "$HOME/vibedna/spotify-manager/spotify-manager-mcp/server.py"
    ```
    Windows PowerShell (keep the quotes around `--`):
    ```powershell
-   claude mcp add spotify-manager -s user "--" "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp\.venv\Scripts\python.exe" "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp\server.py"
+   claude mcp add spotify-manager -s user -e MCPIZE_LICENSE_KEY=YOUR_LICENCE_KEY "--" "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp\.venv\Scripts\python.exe" "$env:USERPROFILE\vibedna\spotify-manager\spotify-manager-mcp\server.py"
    ```
+   The line stays in your shell history, and Claude Code stores the key as plain text.
 
-3. Other MCP apps: the same command and args in the app's MCP settings.
+3. Other MCP apps: the same command, args and key in the app's MCP settings, with the key typed by you.
    ```json
    { "mcpServers": { "spotify-manager": {
        "command": "<full path>/spotify-manager-mcp/.venv/bin/python",
-       "args": ["<full path>/spotify-manager-mcp/server.py"] } } }
+       "args": ["<full path>/spotify-manager-mcp/server.py"],
+       "env": { "MCPIZE_LICENSE_KEY": "" } } } }
    ```
    On Windows the command ends in `.venv\Scripts\python.exe`.
 
@@ -104,7 +107,7 @@ Needs Python 3.10 or newer, and Google Chrome for the panel tools.
 
 ## Check it works
 
-`claude mcp get spotify-manager` shows it connected. Then ask your AI to call `diagnose`, which needs no key and changes nothing at Spotify. A good answer is a short JSON with five lines: `catalog_and_playlists`, `playlist_writing`, `default_artist`, `label_panel` and `deep_analytics`, each `ready` or naming what is missing. It looks for a Chrome and may start the windowless one.
+`claude mcp get spotify-manager` shows it connected. Then ask your AI to call `diagnose`, which needs no Spotify value and changes nothing at Spotify (like every tool, it needs your licence key). A good answer is a short JSON with five lines: `catalog_and_playlists`, `playlist_writing`, `default_artist`, `label_panel` and `deep_analytics`, each `ready` or naming what is missing. It looks for a Chrome and may start the windowless one. Without a valid key every tool answers with an error that says `Spotify Manager needs a valid licence key, and this copy has none the site accepts.` and where to put the key.
 
 ## Start prompt
 
@@ -114,12 +117,13 @@ After installing, paste the start prompt into your AI. It is in the zip as `STAR
 
 1. `claude mcp remove spotify-manager -s user`
 2. End the windowless Chrome if it still runs (a Chrome process with `--remote-debugging-port=9234`).
-3. Delete the unzipped folder `vibedna/spotify-manager` and `~/.spotify-manager/` (your config, the session file and the Chrome profile). If you set `SPOTIFY_MANAGER_PROFILE`, delete that folder too. Nothing else was written.
+3. Delete the unzipped folder `vibedna/spotify-manager` and `~/.spotify-manager/` (your config, the session file and the Chrome profile). If you set `SPOTIFY_MANAGER_PROFILE`, delete that folder too. Remove `~/.vibedna/license_permits.json` (in the `VIBEDNA_HOME` folder if you set it) unless another Vibedna tool still uses it. Nothing else was written.
 
 ## If something fails
 
 - **"Failed to connect" right after installing (mostly Windows):** the first start can take a minute or two while the antivirus reads the new files, longer than Claude Code waits; later starts take seconds. In the folder that holds `server.py`, load it once, `.venv\Scripts\python.exe -c "import server"` (macOS/Linux: `.venv/bin/python -c "import server"`), then restart Claude Code.
 - **Python older than 3.10** (or `py` not found: try `python`): install a current one from python.org, delete `.venv`, repeat step 1.
+- **A tool answers "Spotify Manager needs a valid licence key":** the register line has no `MCPIZE_LICENSE_KEY`, the key is mistyped, the site does not accept it (for a membership key: the plan has ended), or the first check could not reach vibedna.ai. Run `claude mcp remove spotify-manager -s user`, repeat step 2 yourself, restart.
 - **`label_panel` says there is no Spotify session, or a tool says the session is dead:** end the windowless Chrome (Uninstall step 2), repeat step 6, call `diagnose` again.
-- **"Cannot find Chrome":** remove the entry and register again with `-e SPOTIFY_MANAGER_CHROME="<full path to Chrome>"` after `-s user`.
+- **"Cannot find Chrome":** remove the entry and register again with `-e SPOTIFY_MANAGER_CHROME="<full path to Chrome>"` after `-s user`, keeping your `-e MCPIZE_LICENSE_KEY=...`.
 - **Old tools or an old path still show:** an earlier entry is still registered. See step 4.

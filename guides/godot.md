@@ -1,46 +1,54 @@
 ---
 name: godot-install
-description: Install the Vibedna Godot Vibe MCP. Paste this file into your AI chat and ask it to install: it checks the download hash, reads the bundled files and tells you what they do, and after your yes installs into a private virtual environment and registers the server in Claude Code at user scope.
+description: Install the Vibedna Godot Vibe MCP. Paste this file into your AI chat and ask it to install: it checks the download hash, reads the bundled files and tells you what they do, and after your yes installs into a private virtual environment and registers the server in Claude Code at user scope. Your licence key goes in the product's own .env file, never in the chat.
 ---
 
 # Godot Vibe MCP: Install Guide
 
-This guide matches version 1.1.6.
+This guide matches version 1.1.7.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (wiring the Godot binary, what is in the box, the tools). It still describes an older manual way to install (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and `license_gate.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat, and never open or print `.env`: the one key this tool needs, the licence key, is typed by the person into `.env` in their own editor. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (wiring the Godot binary, what is in the box, the tools). It still describes an older manual way to install (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
 
 ## What it is
 
-A Python MCP server that runs on your machine and gives your AI 48 tools for Godot 4 games. It creates a project, writes scenes, scripts and shaders in Godot 4 syntax, drops in ready systems (inventory, dialogue, quests, battles, saving), checks GDScript for Godot 3 habits and, if Godot 4 is installed, boots the game and reads its errors. Needs Python 3.10 or newer. Godot itself is optional and not in the zip.
+A Python MCP server that runs on your machine and gives your AI 48 tools for Godot 4 games; all but `check_for_update` need your licence key. It creates a project, writes scenes, scripts and shaders in Godot 4 syntax, drops in ready systems (inventory, dialogue, quests, battles, saving), checks GDScript for Godot 3 habits and, if Godot 4 is installed, boots the game and reads its errors. Needs Python 3.10 or newer. Godot itself is optional and not in the zip.
 
 ## Trust box
 
-- **File:** `godot-vibe-mcp-1.1.6.zip`, 64,608 bytes, 6 files (`INSTALL.md`, `MANUAL.md`, `README.md`, `START_PROMPT.md`, `requirements.txt`, `server.py`).
-- **SHA-256:** `9f05818f312da0512f9e32a8e3c1480075b8858492541325bd7ba56ff40109a6`
-  - Linux: `sha256sum godot-vibe-mcp-1.1.6.zip`
-  - macOS: `shasum -a 256 godot-vibe-mcp-1.1.6.zip`
-  - Windows PowerShell: `Get-FileHash godot-vibe-mcp-1.1.6.zip` (prints capitals, same value)
+- **File:** `godot-vibe-mcp-1.1.7.zip`, 70,532 bytes, 7 files (`INSTALL.md`, `MANUAL.md`, `README.md`, `START_PROMPT.md`, `license_gate.py`, `requirements.txt`, `server.py`).
+- **SHA-256:** `b610f1ec1ddf67391c4e50a816b0ee2d91a76680f17941b420ef308cee5bb4e6`
+  - Linux: `sha256sum godot-vibe-mcp-1.1.7.zip`
+  - macOS: `shasum -a 256 godot-vibe-mcp-1.1.7.zip`
+  - Windows PowerShell: `Get-FileHash godot-vibe-mcp-1.1.7.zip` (prints capitals, same value)
   - Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/godot-vibe-mcp-1.1.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/godot-vibe-mcp-1.1.7.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies,** pinned to the exact versions tested: `fastmcp==3.4.11`, `mcp==1.30.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`. Not included: Pillow, which only `run_and_screenshot` (Windows only) and the slicing and upscaling options of `import_asset_pack` ask for.
-- **Reads from the environment:** `GODOT_BIN` (optional, full path to your Godot 4 executable), and a `.env` file in its folder or a parent folder if one exists. Leave `PORT` unset: with it the server listens over HTTP on all network interfaces instead of talking only to your AI app.
-- **Writes:** an empty `data` folder inside the unzipped folder; game files inside the project folders you name (`project.godot`, scenes, scripts, shaders, assets, `export_presets.cfg`); a screenshot where you ask for one; a temporary folder during `import_asset_pack`, removed afterwards.
+- **Reads from the environment:** `MCPIZE_LICENSE_KEY` (required, your Vibedna licence key), `GODOT_BIN` (optional, full path to your Godot 4 executable), `VIBEDNA_HOME` (optional, moves the licence permit file), and a `.env` file in its folder or a parent folder if one exists. `license_gate.py` also reads `VIBEDNA_PRODUCT_SLUG` and `VIBEDNA_PRODUCT_NAME`, which change nothing here: `server.py` passes its own product name. Leave `PORT` unset: with it the server listens over HTTP on all network interfaces instead of talking only to your AI app.
+- **Writes:** an empty `data` folder inside the unzipped folder; `~/.vibedna/license_permits.json` (the signed licence permit from vibedna.ai and when it was asked; not your key, only a short one-way hash of it; in the `VIBEDNA_HOME` folder if set); game files inside the project folders you name (`project.godot`, scenes, scripts, shaders, assets, `export_presets.cfg`); a screenshot where you ask for one; a temporary folder during `import_asset_pack`, removed afterwards.
 - **On Windows, one more:** if a tool that runs the game has to search for Godot (PATH, then Downloads, Desktop, Program Files, `AppData` and `<drive>:\Godot`), it saves the path it found as your user variable `GODOT_BIN`. Set `GODOT_BIN` yourself or pass `godot_bin` to skip the search.
-- **Network:** two calls found in `server.py`. `check_for_update` asks `vibedna.ai/api/mcp/latest` for the published version and sends only the product name. `import_asset_pack` downloads a zip when you give it a URL. Nothing else was found.
+- **Network:** two calls found in `server.py`, and one in `license_gate.py`. `check_for_update` asks `vibedna.ai/api/mcp/latest` for the published version and sends only the product name. `import_asset_pack` downloads a zip when you give it a URL. The licence check asks `https://vibedna.ai/api/license/validate` (HTTPS POST) when a tool first runs, then again every 12 hours while the machine is online. It sends your licence key, the product name and a 16 character machine id (a one-way hash made from the computer's name, system and network card number; it cannot be read back), nothing else. The site answers with a permit signed by vibedna.ai, which `license_gate.py` checks with the public key it carries. Offline, the tools keep working until that permit expires: about three days for a key that lives on a subscription, about a year for a key bought once. Nothing else was found.
 - **Programs it starts:** only your Godot executable, for `run_smoke_test`, `run_playtest`, `run_and_screenshot` and asset imports.
-- **Never touches:** keys, accounts or logins (it has none), and no telemetry was found.
+- **Never touches:** accounts or logins. The one key it reads is your licence key, sent only to vibedna.ai to check it; nothing about your games or files is sent, and no telemetry was found.
 
 The hash proves your download is the same file this guide describes. It does not prove who made it or that the code is safe, which is why your AI reads the files and you say yes first. The tools write into whatever folder you point them at, so try them in a new, empty folder before using a project you care about.
 
 ## Keys
 
-None. `GODOT_BIN` is a path, not a secret. To set it, add `-e GODOT_BIN=<full path to Godot>` right after `-s user` in the register line of step 3.
+One: your licence key. It goes in a file named `.env` next to `server.py`, which the server loads itself, so it never goes in the chat or in the register command. Your AI creates the file with this empty line; you paste the value in your own editor:
+
+```env
+MCPIZE_LICENSE_KEY=
+```
+
+- `MCPIZE_LICENSE_KEY` (required): your Vibedna licence key. It starts with `vbd_` and is in your purchase email from Vibedna; with a membership it is in the email that welcomed you to the plan, and it works while the plan is active.
+
+`GODOT_BIN` is a path, not a secret. To set it, add `-e GODOT_BIN=<full path to Godot>` right after `-s user` in the register line of step 3.
 
 ## Install
 
 1. **Check the hash** (Trust box), then unzip to a stable place. Rename any older `godot-vibe-mcp` folder there first.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip godot-vibe-mcp-1.1.6.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive godot-vibe-mcp-1.1.6.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip godot-vibe-mcp-1.1.7.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive godot-vibe-mcp-1.1.7.zip -DestinationPath $HOME\vibedna`
 
    You get `~/vibedna/godot-vibe-mcp` or `C:\Users\<you>\vibedna\godot-vibe-mcp`.
 
@@ -59,7 +67,9 @@ None. `GODOT_BIN` is a path, not a secret. To set it, add `-e GODOT_BIN=<full pa
    .venv\Scripts\python.exe -m pip install -r requirements.txt
    ```
 
-3. **Register it in Claude Code,** at user scope, with full paths. The server needs no extra arguments.
+   Then make the key file: your AI creates `.env` in that folder with the empty line shown under "Keys", and you paste your key in your own editor.
+
+3. **Register it in Claude Code,** at user scope, with full paths. The server needs no extra arguments, and no key goes in this line: it reads your licence key from `.env`.
 
    macOS/Linux:
    ```bash
@@ -84,7 +94,7 @@ None. `GODOT_BIN` is a path, not a secret. To set it, add `-e GODOT_BIN=<full pa
 
 ## Check it works
 
-`claude mcp get godot` should show it connected, with the `.venv` Python as its command. Then make a new empty folder and ask your AI: "Run `lint_gdscript` on <full path of that folder>". It only reads. A good answer has `"ok": true`, `"files_scanned": 0` and `"total_findings": 0`.
+`claude mcp get godot` should show it connected, with the `.venv` Python as its command. Then make a new empty folder and ask your AI: "Run `lint_gdscript` on <full path of that folder>". It only reads. A good answer has `"ok": true`, `"files_scanned": 0` and `"total_findings": 0`. Without a valid key, every tool except `check_for_update` answers only with an error that starts "Godot Vibe MCP needs a valid licence key" and says where to put it.
 
 ## Start prompt
 
@@ -93,7 +103,7 @@ After installing, paste the start prompt into your AI. It is in the zip as `STAR
 ## Uninstall
 
 1. `claude mcp remove godot -s user`
-2. Delete the unzipped folder (`~/vibedna/godot-vibe-mcp`), which holds `.venv` and `data`.
+2. Delete the unzipped folder (`~/vibedna/godot-vibe-mcp`), which holds `.venv`, `data` and your `.env`. Also delete `~/.vibedna/license_permits.json` (in the `VIBEDNA_HOME` folder if you set it), unless another Vibedna product still uses it.
 3. Windows only, if `GODOT_BIN` was saved and you want it gone: `[Environment]::SetEnvironmentVariable("GODOT_BIN", $null, "User")`
 
 Delete nothing else. The games you made live in their own folders and stay yours.
@@ -105,6 +115,7 @@ Delete nothing else. The games you made live in their own folders and stay yours
 - **Python older than 3.10:** check with `python3 --version` (Windows: `py --version`, or `python` if `py` is missing). Install 3.10 or newer, delete `.venv` and repeat step 2.
 - **`ModuleNotFoundError`:** the server is running with another Python. `claude mcp get godot` must show the `.venv` one. If not, remove the entry and repeat step 3.
 - **"Godot binary not found":** generating and linting work without Godot. To run the game, install Godot 4 and set `GODOT_BIN`, or pass `godot_bin` to the tool.
+- **A tool answers "Godot Vibe MCP needs a valid licence key":** `MCPIZE_LICENSE_KEY` is missing or mistyped in `.env`, or the computer could not reach vibedna.ai for the first check. Fix the line, restart Claude Code and try again.
 - **Old tool list after updating:** an earlier entry is still registered. See step 5.
 
 Support: `admin@vibedna.ai`
