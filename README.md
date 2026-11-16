@@ -39,7 +39,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | google-ads | `google-ads-dna-1.0.5.zip` | 19,443 | 5 | no (paid tool): checksums and file list only |
 | gumroad | `gumroad-dna-2.3.3.zip` | 26,087 | 12 | yes, in `source/gumroad/` |
 | jester | `jester-mcp-1.0.7.zip` | 165,210 | 54 | no (paid tool): checksums and file list only |
-| social-brain | `social-brain-mcp-1.12.5.zip` | 621,198 | 37 | no (paid tool): checksums and file list only |
+| social-brain | `social-brain-mcp-1.12.6.zip` | 623,315 | 37 | no (paid tool): checksums and file list only |
 | spotify-manager | `spotify-manager-mcp-1.2.3.zip` | 49,237 | 10 | no (paid tool): checksums and file list only |
 | unity | `unity-vibe-mcp-1.0.4.zip` | 38,763 | 5 | no (paid tool): checksums and file list only |
 | unreal | `unreal-vibe-mcp-1.0.4.zip` | 29,708 | 5 | no (paid tool): checksums and file list only |
