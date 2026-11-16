@@ -36,7 +36,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | ebook-system | `Ebook-System-1.2.2.zip` | 249,234 | 63 | no (paid tool): checksums and file list only |
 | game-assets | `game-assets-mcp-1.0.6.zip` | 61,803 | 15 | yes, in `source/game-assets/` |
 | godot | `godot-vibe-mcp-1.1.6.zip` | 64,608 | 6 | no (paid tool): checksums and file list only |
-| google-ads | `google-ads-dna-1.0.4.zip` | 19,180 | 5 | no (paid tool): checksums and file list only |
+| google-ads | `google-ads-dna-1.0.5.zip` | 19,443 | 5 | no (paid tool): checksums and file list only |
 | gumroad | `gumroad-dna-2.3.3.zip` | 26,087 | 12 | yes, in `source/gumroad/` |
 | jester | `jester-mcp-1.0.7.zip` | 165,210 | 54 | no (paid tool): checksums and file list only |
 | social-brain | `social-brain-mcp-1.12.2.zip` | 634,339 | 38 | no (paid tool): checksums and file list only |
