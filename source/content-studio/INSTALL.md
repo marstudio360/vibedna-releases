@@ -5,26 +5,26 @@ description: Install the Content Studio MCP of Vibedna Motion DNA, which lets yo
 
 # Motion DNA Content Studio MCP: Install Guide
 
-This guide matches version 1.3.6.
+This guide matches version 1.3.7.
 
 This file is the install guide as published at https://vibedna.ai/installs/content-studio.md, without the zip's own size and checksum: a file cannot carry the checksum of the zip it sits in. Both are in the online guide and in the public record at https://github.com/marstudio360/vibedna-releases.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat, and never print one.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (the templates, your own templates, the tools, feeding a poster). Ask before anything is written. Never ask for a key or password in the chat, and never print one.
 
 ## What it is
 
 A Python MCP server that runs on your computer. It draws posts, carousels, stories, reels and thumbnails by code, with no image model, and returns the file paths. It has 41 tools. It makes files and posts nothing.
 
-The free tier renders at 1080px with a small badge. A Pro key removes the badge and unlocks reels and video, custom fonts and custom effects (the zip's `INSTALL.md` lists Pro at $19/mo; check current plans at https://vibedna.ai/content-studio). The package keeps earlier names: type `post-engine` and `CONTENT_STUDIO_LICENSE` exactly as shown.
+The free tier renders at 1080px with a small badge. A Pro key removes the badge and unlocks reels and video, custom fonts and custom effects (the zip's `MANUAL.md` lists Pro at $19/mo; check current plans at https://vibedna.ai/content-studio). The package keeps earlier names: type `post-engine` and `CONTENT_STUDIO_LICENSE` exactly as shown.
 
 ## Trust box
 
-- **File:** `social-content-studio-mcp-1.3.6.zip`, size in the online guide, 10 files, with no top folder inside: unzip into a new folder.
+- **File:** `social-content-studio-mcp-1.3.7.zip`, size in the online guide, 10 files, with no top folder inside: unzip into a new folder.
 - **SHA-256:** `not printed inside the zip, see the online guide`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum social-content-studio-mcp-1.3.6.zip`
-  - macOS: `shasum -a 256 social-content-studio-mcp-1.3.6.zip`
-  - Windows PowerShell: `Get-FileHash social-content-studio-mcp-1.3.6.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-content-studio-mcp-1.3.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/content-studio/`: it can be read before anything is downloaded.
+  - Linux: `sha256sum social-content-studio-mcp-1.3.7.zip`
+  - macOS: `shasum -a 256 social-content-studio-mcp-1.3.7.zip`
+  - Windows PowerShell: `Get-FileHash social-content-studio-mcp-1.3.7.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-content-studio-mcp-1.3.7.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/content-studio/`: it can be read before anything is downloaded.
 - **Dependencies, held to tested versions (exact, or a range where shown):** `mcp==1.30.0`, `Pillow>=10.0.0,<14`. Optional, not in the requirements file: ffmpeg (reels, video) and Playwright (generative backgrounds, `studio_render_video`). Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
 - **Settings it reads from the environment, all optional:** `CONTENT_STUDIO_LICENSE` (Pro key); `PEXELS_API_KEY`, `UNSPLASH_ACCESS_KEY`, `PIXABAY_API_KEY` (stock photos); `STUDIO_URL`, `STUDIO_TOKEN` (a hosted web editor); folder overrides `POST_ENGINE_OUT`, `POST_ENGINE_FONTS`, `POST_ENGINE_LIBRARY`, `POST_ENGINE_EFFECTS`, `CONTENT_STUDIO_HOME`; `FFMPEG_BIN`, `FFPROBE_BIN`.
 - **Files it writes:** `~/.post-engine/` (renders in `out/`, created at start; fonts, image library, `effects.py`), `~/.content-studio/` (your brands and templates), and any output path you pass to a tool.
@@ -50,14 +50,14 @@ Needs Python 3.10 or newer.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip social-content-studio-mcp-1.3.6.zip -d ~/vibedna/content-studio
+   unzip social-content-studio-mcp-1.3.7.zip -d ~/vibedna/content-studio
    cd ~/vibedna/content-studio
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive social-content-studio-mcp-1.3.6.zip -DestinationPath "$env:USERPROFILE\vibedna\content-studio"
+   Expand-Archive social-content-studio-mcp-1.3.7.zip -DestinationPath "$env:USERPROFILE\vibedna\content-studio"
    cd "$env:USERPROFILE\vibedna\content-studio"
    py -m venv .venv
    .venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -83,7 +83,7 @@ Needs Python 3.10 or newer.
    ```
    On Windows the command ends in `.venv\Scripts\python.exe`.
 
-4. Coming from an earlier install: older guides had you add this server by hand to a `.mcp.json` file (home folder or a project) or to `~/.claude/.mcp.json`, and that entry can keep an old copy running. Check with `claude mcp get post-engine`, remove the old entry (`claude mcp remove post-engine -s project` from that folder, or delete it from that file), then restart. Steps 1 and 2 replace the plain `pip install` and the hand-written settings entry in the zip's `INSTALL.md`.
+4. Coming from an earlier install: older guides had you add this server by hand to a `.mcp.json` file (home folder or a project) or to `~/.claude/.mcp.json`, and that entry can keep an old copy running. Check with `claude mcp get post-engine`, remove the old entry (`claude mcp remove post-engine -s project` from that folder, or delete it from that file), then restart. Steps 1 and 2 replace the plain `pip install` and the hand-written settings entry in the zip's `MANUAL.md`.
 
 5. Restart Claude Code: close it and open a new session.
 

@@ -5,9 +5,9 @@ description: Install the Vibedna Unreal Vibe MCP. Paste this file into your AI c
 
 # Unreal Vibe MCP: Install Guide
 
-This guide matches version 1.0.3.
+This guide matches version 1.0.4.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). The `INSTALL.md` inside the zip still describes an older manual way (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (wiring the editor, the tools). It still describes an older manual way to install (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
 
 ## What it is
 
@@ -15,13 +15,13 @@ A Python MCP server that runs on your machine and gives your AI 16 tools for Unr
 
 ## Trust box
 
-- **File:** `unreal-vibe-mcp-1.0.3.zip`, 27,660 bytes, 4 files (`INSTALL.md`, `README.md`, `requirements.txt`, `server.py`).
-- **SHA-256:** `8af72b74390494343aaa5c518f39b4cbf31de8e7323b83df59c9063dfbf98b9e`
-  - Linux: `sha256sum unreal-vibe-mcp-1.0.3.zip`
-  - macOS: `shasum -a 256 unreal-vibe-mcp-1.0.3.zip`
-  - Windows PowerShell: `Get-FileHash unreal-vibe-mcp-1.0.3.zip` (prints capitals, same value)
+- **File:** `unreal-vibe-mcp-1.0.4.zip`, 29,708 bytes, 5 files (`INSTALL.md`, `MANUAL.md`, `README.md`, `requirements.txt`, `server.py`).
+- **SHA-256:** `e17c5db7aadf546c0ee76a0e359eac79c3ab83ca66bafc9cffa190d00e2679e2`
+  - Linux: `sha256sum unreal-vibe-mcp-1.0.4.zip`
+  - macOS: `shasum -a 256 unreal-vibe-mcp-1.0.4.zip`
+  - Windows PowerShell: `Get-FileHash unreal-vibe-mcp-1.0.4.zip` (prints capitals, same value)
   - Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/unreal-vibe-mcp-1.0.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/unreal-vibe-mcp-1.0.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies,** pinned to the exact versions tested: `fastmcp==3.4.11`, `mcp==1.30.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`.
 - **Reads from the environment:** `UE_BIN` (optional, full path to the editor executable) or `UE_ROOT` (optional, your engine folder), and a `.env` file in its folder or a parent folder if one exists. Leave `PORT` unset: with it the server listens over HTTP on all network interfaces instead of talking only to your AI app.
 - **Writes:** an empty `data` folder inside the unzipped folder, and files inside the project folders you name (the `.uproject`, `Source/`, `Config/`, `Content/`, a `.gitignore`, and packaging scripts in the project root). Nothing in your home folder.
@@ -34,7 +34,7 @@ Honest limits:
 
 - The hash proves your download is the same file this guide describes. It does not prove who made it or that the code is safe, which is why your AI reads the files and you say yes first.
 - It cannot write the engine's binary files. Levels, input actions and imported images, audio and video are written as Python recipes under `Content/Python`, and they become real assets only when the editor runs them.
-- `INSTALL.md` and `README.md` in the zip use names that are not in `server.py`: the variable `UNREAL_EDITOR_BIN` (the code reads `UE_BIN` and `UE_ROOT`) and tools such as `run_smoke_test_unreal` and `lint_ue_cpp` (real names: `run_smoke_test_ue5`, `lint_cpp_ue5`). The count of 16 comes from a real start of the server.
+- `MANUAL.md` and `README.md` in the zip use names that are not in `server.py`: the variable `UNREAL_EDITOR_BIN` (the code reads `UE_BIN` and `UE_ROOT`) and tools such as `run_smoke_test_unreal` and `lint_ue_cpp` (real names: `run_smoke_test_ue5`, `lint_cpp_ue5`). The count of 16 comes from a real start of the server.
 - The tools write into whatever folder you point them at, so try them in a new, empty folder before using a project you care about.
 
 ## Keys
@@ -44,8 +44,8 @@ None. `UE_BIN` and `UE_ROOT` are paths, not secrets. To set one, add `-e UE_ROOT
 ## Install
 
 1. **Check the hash** (Trust box), then unzip to a stable place. Rename any older `unreal-vibe-mcp` folder there first.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip unreal-vibe-mcp-1.0.3.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive unreal-vibe-mcp-1.0.3.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip unreal-vibe-mcp-1.0.4.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive unreal-vibe-mcp-1.0.4.zip -DestinationPath $HOME\vibedna`
 
    You get `~/vibedna/unreal-vibe-mcp` or `C:\Users\<you>\vibedna\unreal-vibe-mcp`.
 

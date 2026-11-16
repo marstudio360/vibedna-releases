@@ -5,9 +5,9 @@ description: Install the Vibedna Unity Vibe MCP. Paste this file into your AI ch
 
 # Unity Vibe MCP: Install Guide
 
-This guide matches version 1.0.3.
+This guide matches version 1.0.4.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). The `INSTALL.md` inside the zip still describes an older manual way (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (wiring the editor, the tools). It still describes an older manual way to install (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
 
 ## What it is
 
@@ -15,13 +15,13 @@ A Python MCP server that runs on your machine and gives your AI 17 tools for Uni
 
 ## Trust box
 
-- **File:** `unity-vibe-mcp-1.0.3.zip`, 36,780 bytes, 4 files (`INSTALL.md`, `README.md`, `requirements.txt`, `server.py`).
-- **SHA-256:** `cdcb36abcad0ad1678a623917b885aa9bfb841c9b200e8f4aa3ababbc5716883`
-  - Linux: `sha256sum unity-vibe-mcp-1.0.3.zip`
-  - macOS: `shasum -a 256 unity-vibe-mcp-1.0.3.zip`
-  - Windows PowerShell: `Get-FileHash unity-vibe-mcp-1.0.3.zip` (prints capitals, same value)
+- **File:** `unity-vibe-mcp-1.0.4.zip`, 38,763 bytes, 5 files (`INSTALL.md`, `MANUAL.md`, `README.md`, `requirements.txt`, `server.py`).
+- **SHA-256:** `0de9e0be2a41f37b172c3adbcd38d2f73e2b5291417c564e756c84d19639b887`
+  - Linux: `sha256sum unity-vibe-mcp-1.0.4.zip`
+  - macOS: `shasum -a 256 unity-vibe-mcp-1.0.4.zip`
+  - Windows PowerShell: `Get-FileHash unity-vibe-mcp-1.0.4.zip` (prints capitals, same value)
   - Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/unity-vibe-mcp-1.0.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/unity-vibe-mcp-1.0.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies,** pinned to the exact versions tested: `fastmcp==3.4.11`, `mcp==1.30.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`.
 - **Reads from the environment:** `UNITY_BIN` (optional, full path to your Unity editor executable), and a `.env` file in its folder or a parent folder if one exists. Leave `PORT` unset: with it the server listens over HTTP on all network interfaces instead of talking only to your AI app.
 - **Writes:** an empty `data` folder inside the unzipped folder, and files inside the Unity project folders you name (`ProjectSettings/`, `Packages/manifest.json`, `Assets/` with scenes, scripts, prefabs, `.meta` files, `Assets/Editor/BuildScript.cs`, tests, and `test-results.xml` after a playtest). Nothing in your home folder.
@@ -33,7 +33,7 @@ A Python MCP server that runs on your machine and gives your AI 17 tools for Uni
 Honest limits:
 
 - The hash proves your download is the same file this guide describes. It does not prove who made it or that the code is safe, which is why your AI reads the files and you say yes first.
-- `README.md` and `INSTALL.md` in the zip name three tools that are not in `server.py` (`add_package_dependency`, `add_render_pipeline_settings`, `add_player_input_component`) and leave out two that are (`add_playtest_script_unity`, `run_playtest_unity`). The count of 17 comes from a real start of the server.
+- `README.md` and `MANUAL.md` in the zip name three tools that are not in `server.py` (`add_package_dependency`, `add_render_pipeline_settings`, `add_player_input_component`) and leave out two that are (`add_playtest_script_unity`, `run_playtest_unity`). The count of 17 comes from a real start of the server.
 - New projects are written for editor version 6000.0.23f1 and get an application id under our name (`applicationIdentifier` in `ProjectSettings/ProjectSettings.asset`). Change both if you need to.
 - The tools write into whatever folder you point them at, so try them in a new, empty folder before using a project you care about.
 
@@ -44,8 +44,8 @@ None. `UNITY_BIN` is a path, not a secret. To set it, add `-e UNITY_BIN=<full pa
 ## Install
 
 1. **Check the hash** (Trust box), then unzip to a stable place. Rename any older `unity-vibe-mcp` folder there first.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip unity-vibe-mcp-1.0.3.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive unity-vibe-mcp-1.0.3.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip unity-vibe-mcp-1.0.4.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive unity-vibe-mcp-1.0.4.zip -DestinationPath $HOME\vibedna`
 
    You get `~/vibedna/unity-vibe-mcp` or `C:\Users\<you>\vibedna\unity-vibe-mcp`.
 

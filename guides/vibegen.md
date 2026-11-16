@@ -5,9 +5,9 @@ description: Install the VibeGen MCP, which lets your AI drive the Vibedna gener
 
 # VibeGen MCP: Install Guide
 
-This guide matches version 1.1.2.
+This guide matches version 1.1.3.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a token or password in the chat, and never print one.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (settings, the live view, the tool reference). Ask before anything is written. Never ask for a token or password in the chat, and never print one.
 
 ## What it is
 
@@ -15,19 +15,19 @@ A small Python MCP server that connects your AI to VibeGen, the generative art s
 
 ## Trust box
 
-- **File:** `vibegen-mcp-1.1.2.zip`, 15,596 bytes, 4 files, with no top folder inside: unzip into a new folder.
-- **SHA-256:** `1a35e6ade074e029f2f5ca648d230e2796c1449178dfde335dd0d6e103385054`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum vibegen-mcp-1.1.2.zip`
-  - macOS: `shasum -a 256 vibegen-mcp-1.1.2.zip`
-  - Windows PowerShell: `Get-FileHash vibegen-mcp-1.1.2.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/vibegen-mcp-1.1.2.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/vibegen/`: it can be read before anything is downloaded.
+- **File:** `vibegen-mcp-1.1.3.zip`, 18,389 bytes, 5 files, with no top folder inside: unzip into a new folder.
+- **SHA-256:** `44b85c622a4e7347975bb5969d085646cbfe75009ed393a6d71d8226088172f4`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum vibegen-mcp-1.1.3.zip`
+  - macOS: `shasum -a 256 vibegen-mcp-1.1.3.zip`
+  - Windows PowerShell: `Get-FileHash vibegen-mcp-1.1.3.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/vibegen-mcp-1.1.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/vibegen/`: it can be read before anything is downloaded.
 - **Dependencies, held to tested versions (exact, or a range where shown):** `fastmcp>=3.2.0,<5`, `requests==2.34.2`. Optional, not pinned: Playwright 1.45 or newer, only for `list_catalog` and the render tools; it downloads Chromium. Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
 - **Settings it reads from the environment:** `STUDIO_URL` (the studio to drive, default `http://localhost:3000`), `STUDIO_TOKEN` (optional), and the optional render settings `STUDIO_CHROME_ARGS` and `STUDIO_RENDER_TIMEOUT`.
 - **Files it writes:** nothing in your home folder. It writes a file only at a path you pass to a tool (`save_to`, `out_path`). Presets and engine code are saved by the studio, through its API.
 - **Network:** the address in `STUDIO_URL`, for every tool except `vibedna_info`; your token, if set, goes with each request as the `x-studio-token` header. vibedna.ai for `check_for_update`, which asks for a version number. The render tools open `<STUDIO_URL>/embed` in a headless browser on your machine and hand it the song or picture you name. No other address is called.
 - **Never:** no licence check or telemetry code was found, and it reads only the song or picture whose path you pass.
 
-**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The studio's own code is not in the zip, so what the studio does with a request, a song or a picture cannot be checked here (the zip's `INSTALL.md` says rendering happens on your GPU). Your token is sent to whatever `STUDIO_URL` names: point it only at a studio you trust. `write_engine_source` replaces an engine's whole source file in the studio.
+**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The studio's own code is not in the zip, so what the studio does with a request, a song or a picture cannot be checked here (the zip's `MANUAL.md` says rendering happens on your GPU). Your token is sent to whatever `STUDIO_URL` names: point it only at a studio you trust. `write_engine_source` replaces an engine's whole source file in the studio.
 
 ## Keys
 
@@ -42,14 +42,14 @@ Needs Python 3.10 or newer and a studio to drive: the hosted one at `https://stu
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip vibegen-mcp-1.1.2.zip -d ~/vibedna/vibegen
+   unzip vibegen-mcp-1.1.3.zip -d ~/vibedna/vibegen
    cd ~/vibedna/vibegen
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive vibegen-mcp-1.1.2.zip -DestinationPath "$env:USERPROFILE\vibedna\vibegen"
+   Expand-Archive vibegen-mcp-1.1.3.zip -DestinationPath "$env:USERPROFILE\vibedna\vibegen"
    cd "$env:USERPROFILE\vibedna\vibegen"
    py -m venv .venv
    .venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -77,13 +77,13 @@ Needs Python 3.10 or newer and a studio to drive: the hosted one at `https://stu
    ```
    On Windows the command ends in `.venv\Scripts\python.exe`.
 
-4. Coming from an earlier install: older guides had you add this server by hand to a `.mcp.json` file (home folder or a project) or to `~/.claude/.mcp.json`, and that entry can keep an old copy running. Check with `claude mcp get vibegen`, remove the old entry (`claude mcp remove vibegen -s project` from that folder, or delete it from that file), then restart. Steps 1 and 2 replace the install steps in the zip's `INSTALL.md`.
+4. Coming from an earlier install: older guides had you add this server by hand to a `.mcp.json` file (home folder or a project) or to `~/.claude/.mcp.json`, and that entry can keep an old copy running. Check with `claude mcp get vibegen`, remove the old entry (`claude mcp remove vibegen -s project` from that folder, or delete it from that file), then restart. Steps 1 and 2 replace the install steps in the zip's `MANUAL.md`.
 
 5. Restart Claude Code: close it and open a new session.
 
 ## Check it works
 
-`claude mcp get vibegen` shows it connected. Then ask your AI to call `vibedna_info`, which needs no token and makes no network call. A good answer names `studio-mcp`, version `1.1.2`, the `studio_url` you set and 16 tools (it leaves itself out). Then `get_state` reads the canvas; "Cannot reach studio" means `STUDIO_URL` is wrong or the studio is not running.
+`claude mcp get vibegen` shows it connected. Then ask your AI to call `vibedna_info`, which needs no token and makes no network call. A good answer names `studio-mcp`, version `1.1.3`, the `studio_url` you set and 16 tools (it leaves itself out). Then `get_state` reads the canvas; "Cannot reach studio" means `STUDIO_URL` is wrong or the studio is not running.
 
 ## Start prompt
 

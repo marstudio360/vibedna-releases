@@ -5,9 +5,9 @@ description: Install the Vibedna Godot Vibe MCP. Paste this file into your AI ch
 
 # Godot Vibe MCP: Install Guide
 
-This guide matches version 1.1.5.
+This guide matches version 1.1.6.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). The `INSTALL.md` inside the zip still describes an older manual way (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the folder and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat (this tool needs none). `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (wiring the Godot binary, what is in the box, the tools). It still describes an older manual way to install (plain `pip`, a hand-written settings entry): where it differs, follow this guide.
 
 ## What it is
 
@@ -15,13 +15,13 @@ A Python MCP server that runs on your machine and gives your AI 48 tools for God
 
 ## Trust box
 
-- **File:** `godot-vibe-mcp-1.1.5.zip`, 61,778 bytes, 5 files (`INSTALL.md`, `README.md`, `START_PROMPT.md`, `requirements.txt`, `server.py`).
-- **SHA-256:** `f413b2843406a8f8e743e2d78a5771fe0d3d14543f2b85cbb4593d8e127cdb91`
-  - Linux: `sha256sum godot-vibe-mcp-1.1.5.zip`
-  - macOS: `shasum -a 256 godot-vibe-mcp-1.1.5.zip`
-  - Windows PowerShell: `Get-FileHash godot-vibe-mcp-1.1.5.zip` (prints capitals, same value)
+- **File:** `godot-vibe-mcp-1.1.6.zip`, 64,608 bytes, 6 files (`INSTALL.md`, `MANUAL.md`, `README.md`, `START_PROMPT.md`, `requirements.txt`, `server.py`).
+- **SHA-256:** `9f05818f312da0512f9e32a8e3c1480075b8858492541325bd7ba56ff40109a6`
+  - Linux: `sha256sum godot-vibe-mcp-1.1.6.zip`
+  - macOS: `shasum -a 256 godot-vibe-mcp-1.1.6.zip`
+  - Windows PowerShell: `Get-FileHash godot-vibe-mcp-1.1.6.zip` (prints capitals, same value)
   - Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/godot-vibe-mcp-1.1.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/godot-vibe-mcp-1.1.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies,** pinned to the exact versions tested: `fastmcp==3.4.11`, `mcp==1.30.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`. Not included: Pillow, which only `run_and_screenshot` (Windows only) and the slicing and upscaling options of `import_asset_pack` ask for.
 - **Reads from the environment:** `GODOT_BIN` (optional, full path to your Godot 4 executable), and a `.env` file in its folder or a parent folder if one exists. Leave `PORT` unset: with it the server listens over HTTP on all network interfaces instead of talking only to your AI app.
 - **Writes:** an empty `data` folder inside the unzipped folder; game files inside the project folders you name (`project.godot`, scenes, scripts, shaders, assets, `export_presets.cfg`); a screenshot where you ask for one; a temporary folder during `import_asset_pack`, removed afterwards.
@@ -39,8 +39,8 @@ None. `GODOT_BIN` is a path, not a secret. To set it, add `-e GODOT_BIN=<full pa
 ## Install
 
 1. **Check the hash** (Trust box), then unzip to a stable place. Rename any older `godot-vibe-mcp` folder there first.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip godot-vibe-mcp-1.1.5.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive godot-vibe-mcp-1.1.5.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip godot-vibe-mcp-1.1.6.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive godot-vibe-mcp-1.1.6.zip -DestinationPath $HOME\vibedna`
 
    You get `~/vibedna/godot-vibe-mcp` or `C:\Users\<you>\vibedna\godot-vibe-mcp`.
 

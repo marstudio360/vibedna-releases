@@ -35,7 +35,7 @@ _OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.3.6"
+VERSION = "1.3.7"
 PRODUCT_SLUG = "post-engine-mcp"
 
 

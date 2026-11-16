@@ -37,7 +37,7 @@ mcp = FastMCP("vault-mcp")
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.1.4"
+VERSION = "1.1.5"
 PRODUCT_SLUG = "vault"
 
 

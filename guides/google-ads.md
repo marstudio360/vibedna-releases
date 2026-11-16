@@ -5,9 +5,9 @@ description: Install Google Ads DNA, the MCP server that lets your AI read and r
 
 # Google Ads DNA: Install Guide
 
-This guide matches version 1.0.3.
+This guide matches version 1.0.4.
 
-> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key, secret or password in the chat. Where `INSTALL.md` differs (bare `pip`, system `python`, local scope), follow this guide; its Google Cloud steps still apply. Before any change to the account, name the campaign, old value and new value, and wait for a yes.
+> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key, secret or password in the chat. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (the Google Cloud steps, connecting your Google account, the tools, safety): where it differs (bare `pip`, system `python`, local scope), follow this guide; its Google Cloud steps still apply. Before any change to the account, name the campaign, old value and new value, and wait for a yes.
 
 ## What it is
 
@@ -15,14 +15,14 @@ Your AI works on your own Google Ads account: campaign results, custom reports, 
 
 ## Trust box
 
-- **File:** `google-ads-dna-1.0.3.zip`, 16,420 bytes, 4 files, one folder `google-ads-dna/`.
-- **SHA-256:** `bb04508484b9b42a9f0dcac56d068b13ad227c337bb2f7bb7fd0e08502d14cbb`
-  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.3.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.3.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.3.zip` (capitals are fine). Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `google-ads-dna-1.0.4.zip`, 19,180 bytes, 5 files, one folder `google-ads-dna/`.
+- **SHA-256:** `c6b104992ed36744fed74d34b0ce25670fef14bf92d79795204041c09cbaa1ba`
+  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.4.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.4.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.4.zip` (capitals are fine). Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies:** 2, pinned to exact tested versions: `mcp==1.30.0`, `httpx==0.28.1`.
-- **Reads from the environment:** `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_CUSTOMER_ID`. Optional: `GOOGLE_ADS_MAX_DAILY_BUDGET`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_API_VERSION`, `GOOGLE_ADS_DNA_HOME`.
+- **Reads from the environment:** `GOOGLE_ADS_CLIENT_ID` and `GOOGLE_ADS_CLIENT_SECRET` (required). Optional: `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_MAX_DAILY_BUDGET`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN` (only for older setups that still use a developer token: a new setup needs none, and none is built into the code), `GOOGLE_ADS_API_VERSION`, `GOOGLE_ADS_DNA_HOME`.
 - **Writes:** `~/.google-ads-dna/credentials.json` (client id, client secret and Google refresh token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.google-ads-dna/actions.jsonl` (one line per change made).
-- **Network:** `googleads.googleapis.com` (your account) and `oauth2.googleapis.com` (sign-in tokens); a logo given as a web link is downloaded. To approve, you open an `accounts.google.com` link while it listens on `127.0.0.1` (random port) for Google's answer. No call to vibedna.ai or anywhere else was found in `server.py`.
+- **Network:** `googleads.googleapis.com` (your account) and `oauth2.googleapis.com` (sign-in tokens); a logo given as a web link is downloaded. To approve, you open an `accounts.google.com` link while it listens on `127.0.0.1` (random port) for Google's answer. `server.py` calls only the hosts named here, none of them vibedna.ai (the `www.googleapis.com/auth/adwords` text in it is the name of the permission it asks Google for, not a call); your AI can confirm it by listing every URL in the file.
 - **Never touches:** your other files, except a local logo image you name for a campaign.
 
 The hash proves this is the file the guide was measured from, not who made it or what the code does. That is why your AI reads the code first.
@@ -36,9 +36,9 @@ Safety in the code, and its limits:
 
 ## Keys
 
-All three go into the step 4 line, which you run yourself.
+They go into the step 4 line, which you run yourself.
 
-- **Client id and client secret** (required): step 2 of `INSTALL.md` in the zip (a Google Cloud project, "Google Ads API" enabled, an OAuth client of type Desktop app).
+- **Client id and client secret** (required): step 2 of `MANUAL.md` in the zip (a Google Cloud project, "Google Ads API" enabled, an OAuth client of type Desktop app).
 - **Account id** (optional): the 10-digit number at the top right of ads.google.com. Without it, each call must name the account.
 
 You sign in to Google in your browser; the refresh token goes to `credentials.json`, never to the chat. Never type the id or secret into the chat.
@@ -48,13 +48,13 @@ You sign in to Google in your browser; the refresh token goes to `credentials.js
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (rename an existing `google-ads-dna` folder first). You get `~/vibedna/google-ads-dna` or `C:\Users\<you>\vibedna\google-ads-dna`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.3.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.3.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.4.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.4.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`
    - Windows: `py -m venv .venv` then `.venv\Scripts\python.exe -m pip install -r requirements.txt`
-4. You, in your own terminal, register it in Claude Code at user scope. Replace the three `YOUR_` values.
+4. You, in your own terminal, register it in Claude Code at user scope. Replace the `YOUR_` values; if you skip the account id, leave out the `-e GOOGLE_ADS_CUSTOMER_ID=YOUR_ACCOUNT_ID` part.
 
    macOS/Linux:
    ```
@@ -72,7 +72,7 @@ Needs Python 3.10 or newer.
      "args": ["/Users/<you>/vibedna/google-ads-dna/server.py"],
      "env": { "GOOGLE_ADS_CLIENT_ID": "", "GOOGLE_ADS_CLIENT_SECRET": "", "GOOGLE_ADS_CUSTOMER_ID": "" } } } }
    ```
-6. Coming from an earlier install: `INSTALL.md` registered it with `-s local`, and a hand-made `.mcp.json` entry may exist; either can keep an old copy running. Check with `claude mcp get google-ads-dna`. If it shows another path or scope, run `claude mcp remove google-ads-dna -s local` (or `-s project`) from that folder, or delete its block from that file.
+6. Coming from an earlier install: the older install steps registered it with `-s local`, and a hand-made `.mcp.json` entry may exist; either can keep an old copy running. Check with `claude mcp get google-ads-dna`. If it shows another path or scope, run `claude mcp remove google-ads-dna -s local` (or `-s project`) from that folder, or delete its block from that file.
 7. Restart Claude Code (close it, open a new session).
 8. Connect Google once: ask your AI for `authorize_start` (no values), open the link on this computer, sign in as the owner of the ads account, approve, then ask for `authorize_finish`.
 
@@ -98,7 +98,7 @@ Delete nothing else. To cut access at Google too, remove the app under third-par
 
 - **"Failed to connect" right after installing (mostly Windows):** the first start can take a minute or two while the antivirus reads the new files, longer than Claude Code waits; later starts take seconds. In the folder that holds `server.py`, load it once, `.venv\Scripts\python.exe -c "import server"` (macOS/Linux: `.venv/bin/python -c "import server"`), then restart Claude Code.
 - **Python older than 3.10:** install a newer one, delete `.venv`, repeat step 3.
-- **"Failed to connect":** the entry does not run the `.venv` Python. Remove it and repeat step 4.
+- **Still "Failed to connect" after that:** the entry does not run the `.venv` Python (you can check with `claude mcp get google-ads-dna`). Remove it and repeat step 4.
 - **`setup_status` shows `client_id` or `client_secret` false:** remove the entry, run the step 4 line again yourself, restart, then step 8.
 - **Old tools or an old path still show:** an old entry is still registered. See step 6.
 

@@ -5,11 +5,11 @@ description: Install the Vibedna Game Assets MCP, which finds free game art you 
 
 # Game Assets MCP: Install Guide
 
-This guide matches version 1.0.5.
+This guide matches version 1.0.6.
 
 This file is the install guide as published at https://vibedna.ai/installs/game-assets.md, without the zip's own size and checksum: a file cannot carry the checksum of the zip it sits in. Both are in the online guide and in the public record at https://github.com/marstudio360/vibedna-releases.
 
-> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `vibe-game-assets-mcp/requirements.txt` and the three `server.py` files and say in plain words what they do before installing. Ask before anything is written. Never ask for a key or password in the chat, and never open or print a file that holds keys. The zip's own `INSTALL.md` files describe an older manual way: where they differ, follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `MANUAL.md`, `vibe-game-assets-mcp/requirements.txt` and the three `server.py` files and say in plain words what they do before installing. Ask before anything is written. Never ask for a key or password in the chat, and never open or print a file that holds keys. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (settings, the tools, a first test). It and `asset-forge-mcp/INSTALL.md` describe an older manual way to install: where they differ, follow this guide.
 
 ## What it is
 
@@ -17,13 +17,13 @@ A Python MCP server on your machine with 30 tools for game art and sound. The 8 
 
 ## Trust box
 
-- **File:** `game-assets-mcp-1.0.5.zip`, size in the online guide, 14 files.
+- **File:** `game-assets-mcp-1.0.6.zip`, size in the online guide, 14 files.
 - **SHA-256:** `not printed inside the zip, see the online guide`
-  - Linux: `sha256sum game-assets-mcp-1.0.5.zip`
-  - macOS: `shasum -a 256 game-assets-mcp-1.0.5.zip`
-  - Windows PowerShell: `Get-FileHash game-assets-mcp-1.0.5.zip` (capitals, same value)
+  - Linux: `sha256sum game-assets-mcp-1.0.6.zip`
+  - macOS: `shasum -a 256 game-assets-mcp-1.0.6.zip`
+  - Windows PowerShell: `Get-FileHash game-assets-mcp-1.0.6.zip` (capitals, same value)
   - Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/game-assets-mcp-1.0.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/game-assets/`: it can be read before anything is downloaded.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/game-assets-mcp-1.0.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/game-assets/`: it can be read before anything is downloaded.
 - **Dependencies,** pinned to the exact versions tested: `mcp==1.30.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`.
 - **Reads from the environment:** `ASSET_FORGE_LIB` (where harvested packs are kept), the four keys below, and a `.env` file in `vibe-game-assets-mcp/` or a parent folder if one exists.
 - **Writes:** a `cache` folder in `vibe-game-assets-mcp/` (copies of generated images); the library, by default `~/.asset-forge/library-root`, from the first harvest (downloads up to 300 MB per pack, four shelves, a manifest, gallery pages); the output paths you give the generate tools; the game folder you name in `export_pack`.
@@ -52,8 +52,8 @@ You put keys in yourself, never in the chat: either a `.env` file in `game-asset
 ## Install
 
 1. **Check the hash** (Trust box), then unzip to a stable place, keeping the layout. Rename any older `game-assets-mcp` folder there first.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip game-assets-mcp-1.0.5.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive game-assets-mcp-1.0.5.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip game-assets-mcp-1.0.6.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive game-assets-mcp-1.0.6.zip -DestinationPath $HOME\vibedna`
 
    You get `~/vibedna/game-assets-mcp` or `C:\Users\<you>\vibedna\game-assets-mcp`.
 

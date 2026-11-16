@@ -5,9 +5,9 @@ description: Install Vibedna GumroadDNA, the MCP server that lets your AI run yo
 
 # GumroadDNA: Install Guide
 
-This guide matches version 2.3.2.
+This guide matches version 2.3.3.
 
-> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for the token or a password in the chat, and never print the `.env` file. Where `INSTALL.md` differs (a git clone, bare `pip`, the system `python`, an entry written by hand), follow this guide. Before any tool call that changes the store, say what will change and wait for a yes.
+> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for the token or a password in the chat, and never print the `.env` file. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (the list of tools, checks): where it differs (a git clone, bare `pip`, the system `python`, an entry written by hand), follow this guide. Before any tool call that changes the store, say what will change and wait for a yes.
 
 ## What it is
 
@@ -15,10 +15,10 @@ Your AI works on your Gumroad store without the browser: products, files and cov
 
 ## Trust box
 
-- **File:** `gumroad-dna-2.3.2.zip`, 23,655 bytes, 11 files, one folder `gumroad-dna/`.
-- **SHA-256:** `1048de82a1a93f3cd258c8693d5ce09cbf0a13efc1d0b862332e6ee9d69587ae`
-  Check before unzipping. Linux: `sha256sum gumroad-dna-2.3.2.zip`. macOS: `shasum -a 256 gumroad-dna-2.3.2.zip`. Windows PowerShell: `Get-FileHash gumroad-dna-2.3.2.zip` (capitals are fine). Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/gumroad-dna-2.3.2.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/gumroad/`: it can be read before anything is downloaded.
+- **File:** `gumroad-dna-2.3.3.zip`, 26,087 bytes, 12 files, one folder `gumroad-dna/`.
+- **SHA-256:** `7729c286678bd3b1db75f9b4ae078e4382364cd2984e4d15ad765afe548f5482`
+  Check before unzipping. Linux: `sha256sum gumroad-dna-2.3.3.zip`. macOS: `shasum -a 256 gumroad-dna-2.3.3.zip`. Windows PowerShell: `Get-FileHash gumroad-dna-2.3.3.zip` (capitals are fine). Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/gumroad-dna-2.3.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/gumroad/`: it can be read before anything is downloaded.
 - **Dependencies:** 4, pinned to exact tested versions: `mcp==1.30.0`, `requests==2.34.2`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`.
 - **Reads from the environment:** `GUMROAD_ACCESS_TOKEN`, from your environment or a `.env` file next to `server.py`. Never set `PORT`: it puts the server on the network with no password.
 - **Writes:** nothing in your home folder. `download_product_files` and `download_product_images` save into the folder you name. If Pillow is present (it is not in `requirements.txt`), `create_product` may save a square `.sq.jpg` next to your cover image.
@@ -42,8 +42,8 @@ One key, required for everything except `scan_gumroad_niche`, `vibedna_info` and
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (rename an existing `gumroad-dna` folder first). You get `~/vibedna/gumroad-dna` or `C:\Users\<you>\vibedna\gumroad-dna`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip gumroad-dna-2.3.2.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive gumroad-dna-2.3.2.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip gumroad-dna-2.3.3.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive gumroad-dna-2.3.3.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`
@@ -68,7 +68,7 @@ Needs Python 3.10 or newer.
 ## Check it works
 
 1. `claude mcp get gumroad-dna` shows it connected, with the `.venv` Python as the command.
-2. Ask your AI to call `vibedna_info`. It needs no token and answers with product `gumroad-dna`, version `2.3.2` and 44 tools.
+2. Ask your AI to call `vibedna_info`. It needs no token and answers with product `gumroad-dna`, version `2.3.3` and 44 tools.
 3. With the token in place, ask for `get_account`. It reads your Gumroad profile and changes nothing: the token works.
 
 ## Start prompt

@@ -5,11 +5,11 @@ description: Install Vibedna Vault, a local encrypted store for your API keys an
 
 # Vault: Install Guide
 
-This guide matches version 1.1.4.
+This guide matches version 1.1.5.
 
 This file is the install guide as published at https://vibedna.ai/installs/vault.md, without the zip's own size and checksum: a file cannot carry the checksum of the zip it sits in. Both are in the online guide and in the public record at https://github.com/marstudio360/vibedna-releases.
 
-> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `requirements.txt`, `server.py` and `vault_core.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key or the master password in the chat. Where `INSTALL.md` differs (bare `pip`, a config block to paste), follow this guide.
+> **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and `vault_core.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key or the master password in the chat. `INSTALL.md` in the zip is this guide. `MANUAL.md` is the product's own older document, kept in the zip for what this guide does not repeat (creating the vault, adding keys, the window, daily use): where it differs (bare `pip`, a config block to paste), follow this guide.
 
 ## What it is
 
@@ -17,10 +17,10 @@ One encrypted file on your computer that holds your API keys, tokens and passwor
 
 ## Trust box
 
-- **File:** `vault-mcp-1.1.4.zip`, size in the online guide, 9 files, one folder `vault-mcp/`.
+- **File:** `vault-mcp-1.1.5.zip`, size in the online guide, 9 files, one folder `vault-mcp/`.
 - **SHA-256:** `not printed inside the zip, see the online guide`
-  Check before unzipping. Linux: `sha256sum vault-mcp-1.1.4.zip`. macOS: `shasum -a 256 vault-mcp-1.1.4.zip`. Windows PowerShell: `Get-FileHash vault-mcp-1.1.4.zip` (capitals are fine). Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/vault-mcp-1.1.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/vault/`: it can be read before anything is downloaded.
+  Check before unzipping. Linux: `sha256sum vault-mcp-1.1.5.zip`. macOS: `shasum -a 256 vault-mcp-1.1.5.zip`. Windows PowerShell: `Get-FileHash vault-mcp-1.1.5.zip` (capitals are fine). Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/vault-mcp-1.1.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/vault/`: it can be read before anything is downloaded.
 - **Dependencies:** 3, pinned to exact tested versions: `cryptography==50.0.2`, `keyring==25.7.0`, `mcp==1.30.0`.
 - **Reads from the environment:** `VAULT_HOME` (moves the vault file), `VAULT_BACKUP_HOME` (moves the backups), `VAULT_MASTER_PASSWORD` (only for machines with no system keyring). Never set `PORT`: it puts the server on the network with no password.
 - **Writes:** `~/.vibedna-vault/vault.enc` (the encrypted vault), `~/.vibedna-vault/logs/` (which entry was read, when and from which folder; leak scan hits by file and line; no values), `~/.vibedna-vault/backups/` (the last 30 copies of the encrypted file). The master password sits in your system keyring as service `vibedna-vault`, user `master`.
@@ -45,8 +45,8 @@ No API key and no licence key. The only secret is the master password, typed by 
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (rename an existing `vault-mcp` folder first). You get `~/vibedna/vault-mcp` or `C:\Users\<you>\vibedna\vault-mcp`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip vault-mcp-1.1.4.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive vault-mcp-1.1.4.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip vault-mcp-1.1.5.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive vault-mcp-1.1.5.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`
