@@ -4,7 +4,7 @@ Local MCP that gives all Claude sessions access to the encrypted vault.
 Master password stored in Windows Credential Manager — never in plaintext.
 
 Tools:
-  credential_exists(name)          — check before asking Mariano for a key
+  credential_exists(name)          — check before asking the user for a key
   get_credential(name, key)        — retrieve a specific key value
   list_credentials()               — all names + categories (no values)
   search_credentials(term)         — find by name or category
@@ -37,7 +37,7 @@ mcp = FastMCP("vault-mcp")
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.1.2"
+VERSION = "1.1.4"
 PRODUCT_SLUG = "vault"
 
 
@@ -137,7 +137,7 @@ def _get_fields(entry: dict) -> dict:
 
 @mcp.tool()
 def credential_exists(name: str) -> str:
-    """[FREE] Check if a named credential exists in the vault before asking Mariano for it."""
+    """[FREE] Check if a named credential exists in the vault before asking the user for it."""
     _, entries = _load_vault()
     if entries is None:
         return "Vault unavailable — check Credential Manager has the master password."

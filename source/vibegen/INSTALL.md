@@ -1,113 +1,105 @@
+---
+name: vibegen-mcp-install
+description: Install the VibeGen MCP, which lets your AI drive the Vibedna generative art studio. Paste this file into your AI chat and ask it to install it. Your AI checks the download, reads the code, and after your yes installs it in its own virtual environment with one register command. Your token never goes in the chat.
+---
+
 # VibeGen MCP: Install Guide
 
-Drive the **VibeGen** generative art studio from any MCP-capable AI (Claude Code, Claude Desktop, Cursor, or anything that speaks MCP). Your AI can:
+This guide matches version 1.1.2.
 
-- read the live canvas state + every parameter
-- move sliders and switch engines in real time
-- save, load, and apply preset JSONs
-- **read and rewrite the engine's generative math** (GLSL / TypeScript) with live hot-reload into the canvas
-- capture PNG snapshots so your AI can SEE what it made
-- list every scene with its sliders, defaults and curated looks
-- **render files with no studio tab open**: a PNG, an MP4, or an audio-reactive MP4 with your song inside
+This file is the install guide as published at https://vibedna.ai/installs/vibegen.md, without the zip's own size and checksum: a file cannot carry the checksum of the zip it sits in. Both are in the online guide and in the public record at https://github.com/marstudio360/vibedna-releases.
 
-Free. Point it at a VibeGen studio (yours or the hosted one). What it can unlock depends on your studio tier.
+> **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a token or password in the chat, and never print one.
 
-## The fast way (let your AI do it)
+## What it is
 
-1. Clone the repo somewhere stable, like `~/vibegen-mcp/`:
+A small Python MCP server that connects your AI to VibeGen, the generative art studio of Vibedna. Your AI can read the live canvas, switch engines, move sliders, save presets, rewrite an engine's code, and render a PNG, an MP4 or an MP4 that moves to your song. It has 17 tools.
+
+## Trust box
+
+- **File:** `vibegen-mcp-1.1.2.zip`, size in the online guide, 4 files, with no top folder inside: unzip into a new folder.
+- **SHA-256:** `not printed inside the zip, see the online guide`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum vibegen-mcp-1.1.2.zip`
+  - macOS: `shasum -a 256 vibegen-mcp-1.1.2.zip`
+  - Windows PowerShell: `Get-FileHash vibegen-mcp-1.1.2.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/vibegen-mcp-1.1.2.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/vibegen/`: it can be read before anything is downloaded.
+- **Dependencies, held to tested versions (exact, or a range where shown):** `fastmcp>=3.2.0,<5`, `requests==2.34.2`. Optional, not pinned: Playwright 1.45 or newer, only for `list_catalog` and the render tools; it downloads Chromium. Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
+- **Settings it reads from the environment:** `STUDIO_URL` (the studio to drive, default `http://localhost:3000`), `STUDIO_TOKEN` (optional), and the optional render settings `STUDIO_CHROME_ARGS` and `STUDIO_RENDER_TIMEOUT`.
+- **Files it writes:** nothing in your home folder. It writes a file only at a path you pass to a tool (`save_to`, `out_path`). Presets and engine code are saved by the studio, through its API.
+- **Network:** the address in `STUDIO_URL`, for every tool except `vibedna_info`; your token, if set, goes with each request as the `x-studio-token` header. vibedna.ai for `check_for_update`, which asks for a version number. The render tools open `<STUDIO_URL>/embed` in a headless browser on your machine and hand it the song or picture you name. No other address is called.
+- **Never:** no licence check or telemetry code was found, and it reads only the song or picture whose path you pass.
+
+**Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. The studio's own code is not in the zip, so what the studio does with a request, a song or a picture cannot be checked here (the zip's `INSTALL.md` says rendering happens on your GPU). Your token is sent to whatever `STUDIO_URL` names: point it only at a studio you trust. `write_engine_source` replaces an engine's whole source file in the studio.
+
+## Keys
+
+One, and it is optional: `STUDIO_TOKEN`, your subscription token. Per the zip, with no token you can read the canvas and move every engine and slider; rewriting engines and rendering from the hosted studio need an Ultra token, and a studio you run yourself needs none. Subscribers get the token at vibedna.ai/studio ("Set up in your AI"); if that page hands you a file with the token inside, keep it out of the chat. You add the token yourself with `-e` in the register command (step 2), typed in your own terminal.
+
+## Install
+
+Needs Python 3.10 or newer and a studio to drive: the hosted one at `https://studio.vibedna.ai`, or one you run yourself.
+
+1. Get the zip (https://vibedna.ai/api/free-download?slug=vibegen), check the hash, unzip into a new folder with a stable path, install into a virtual environment.
+
+   macOS/Linux:
+   ```bash
+   mkdir -p ~/vibedna
+   unzip vibegen-mcp-1.1.2.zip -d ~/vibedna/vibegen
+   cd ~/vibedna/vibegen
+   python3 -m venv .venv
+   .venv/bin/python -m pip install -r requirements.txt
    ```
-   git clone https://github.com/marstudio360/vibegen-mcp
+   Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
+   ```powershell
+   Expand-Archive vibegen-mcp-1.1.2.zip -DestinationPath "$env:USERPROFILE\vibedna\vibegen"
+   cd "$env:USERPROFILE\vibedna\vibegen"
+   py -m venv .venv
+   .venv\Scripts\python.exe -m pip install -r requirements.txt
    ```
-   (or unzip the download from vibedna.ai).
-2. Open an AI session in that folder and say:
+   Only for the render tools, after a yes to the browser download: `.venv/bin/python -m pip install playwright`, then `.venv/bin/python -m playwright install chromium` (Windows: `.venv\Scripts\python.exe`).
 
-   > "Install this VibeGen MCP. Run `pip install -r requirements.txt`, add the `.mcp.json` entry below pointing at the absolute path of server.py, set STUDIO_URL to my studio, then close and reopen the tab."
+2. Register it in Claude Code at user scope, with full paths. This drives the hosted studio; leave out `-e STUDIO_URL=...` for a studio on `http://localhost:3000`.
 
-## Requirements
+   macOS/Linux:
+   ```bash
+   claude mcp add vibegen -s user -e STUDIO_URL=https://studio.vibedna.ai -- "$HOME/vibedna/vibegen/.venv/bin/python" "$HOME/vibedna/vibegen/server.py"
+   ```
+   Windows PowerShell:
+   ```powershell
+   claude mcp add vibegen -s user -e STUDIO_URL=https://studio.vibedna.ai -- "$env:USERPROFILE\vibedna\vibegen\.venv\Scripts\python.exe" "$env:USERPROFILE\vibedna\vibegen\server.py"
+   ```
+   With a token, run the same line yourself in your own terminal with `-e STUDIO_TOKEN=<your token>` added before the `--`, so it never passes through the chat. If already registered, run `claude mcp remove vibegen -s user` first.
 
-- Python 3.10+
-- A VibeGen studio to drive (the hosted studio at vibedna.ai/studio, or one you run yourself)
-- `pip install -r requirements.txt` (fastmcp, requests)
-- Optional, only for the render tools: `pip install playwright && playwright install chromium`
+3. Other MCP apps: the same command, args and env in the app's MCP settings.
+   ```json
+   { "mcpServers": { "vibegen": {
+       "command": "<full path>/vibegen/.venv/bin/python",
+       "args": ["<full path>/vibegen/server.py"],
+       "env": { "STUDIO_URL": "https://studio.vibedna.ai" } } } }
+   ```
+   On Windows the command ends in `.venv\Scripts\python.exe`.
 
-## Configure
+4. Coming from an earlier install: older guides had you add this server by hand to a `.mcp.json` file (home folder or a project) or to `~/.claude/.mcp.json`, and that entry can keep an old copy running. Check with `claude mcp get vibegen`, remove the old entry (`claude mcp remove vibegen -s project` from that folder, or delete it from that file), then restart. Steps 1 and 2 replace the install steps in the zip's `INSTALL.md`.
 
-| Variable | What it does | Default |
-|---|---|---|
-| `STUDIO_URL` | the studio to drive | `http://localhost:3000` (a studio you run yourself) |
-| `STUDIO_TOKEN` | shared secret sent as `x-studio-token`. Required only when the studio enforces one (your subscription token). | *(empty)* |
-| `STUDIO_CHROME_ARGS` | browser flags for the render tools, if the defaults do not reach your GPU | picked per OS |
-| `STUDIO_RENDER_TIMEOUT` | longest single render, in seconds | `1800` |
+5. Restart Claude Code: close it and open a new session.
 
-> **Where the studio runs: your machine, never ours.** The studio renders in your own browser (the art and the video bake happen on your GPU, client-side). Point `STUDIO_URL` at wherever you run it: `http://localhost:3000` (run it yourself), your own VPS, or the hosted studio at **https://studio.vibedna.ai**. The render still happens locally, on your GPU.
+## Check it works
 
-> The easiest path is not this file: go to **vibedna.ai/studio**, click **Set up in your AI**, and drop the file it gives you into your AI chat. If you're a subscriber, your token is baked in automatically. This repo is the manual path.
+`claude mcp get vibegen` shows it connected. Then ask your AI to call `vibedna_info`, which needs no token and makes no network call. A good answer names `studio-mcp`, version `1.1.2`, the `studio_url` you set and 16 tools (it leaves itself out). Then `get_state` reads the canvas; "Cannot reach studio" means `STUDIO_URL` is wrong or the studio is not running.
 
-## Add to your MCP client
+## Start prompt
 
-`.mcp.json`:
+After installing, paste the start prompt into your AI. It is in the zip as `START_PROMPT.md` and at https://vibedna.ai/prompts/vibegen.md.
 
-```json
-{
-  "mcpServers": {
-    "vibegen": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["/absolute/path/to/vibegen-mcp/server.py"],
-      "env": {
-        "STUDIO_URL": "http://localhost:3000",
-        "STUDIO_TOKEN": ""
-      }
-    }
-  }
-}
-```
+## Uninstall
 
-Close and reopen your tab so the MCP loads.
+Run `claude mcp remove vibegen -s user` and delete the unzipped folder. The product has no data folder of its own. Delete nothing else.
 
-## Live view
+## If something fails
 
-To watch your AI's changes in a browser in real time, open the studio with the remote flag:
 
-```
-http://localhost:3000/?remote=1
-```
-
-That enables the state-sync loop. Without the flag, public visitors get a clean sandboxed session by design.
-
-## Tool reference
-
-| Tool | What it does |
-|---|---|
-| `get_state()` | engine id, params, schema, applied recipe |
-| `set_params(params)` | move any sliders (partial updates fine) |
-| `set_engine(engine_id)` | switch engine |
-| `highlight_params(keys)` | flash specific sliders |
-| `list_saves()` / `read_save()` / `write_save()` / `apply_save()` | preset JSON workflow |
-| `read_engine_source(engine_id)` | fetch the engine's generative math |
-| `write_engine_source(engine_id, code)` | rewrite the math, hot-reloads live |
-| `snapshot_canvas(save_to?)` | PNG capture of the live canvas |
-| `list_catalog(scene?, save_to?)` | every scene and its curated looks; one scene's sliders, defaults and looks; or the whole catalog saved to a JSON file |
-| `render_still(engine_id, out_path, ...)` | a PNG of a scene, no studio tab needed (params, effects, look, size, a picture of yours for the image scenes) |
-| `render_video(engine_id, out_path, ...)` | an MP4 of a scene (up to 120 s, up to 4096 px) |
-| `render_song(engine_id, song_path, out_path, ...)` | an audio-reactive MP4 with your song inside, the same as the studio's "Export the whole song" (music knobs, automation lanes, start and end cut) |
-| `check_for_update()` | tells you if a newer version is published, and how to update |
-| `vibedna_info()` | what this MCP does and which studio it points at |
-
-The same request always renders the same pixels. The render tools open the studio's `/embed` page in a headless browser on your machine and render on your GPU. On the hosted studio they need an Ultra token in `STUDIO_TOKEN`; a studio you run yourself always allows them.
-
-## Trouble
-
-- **Cannot reach studio**: the studio is not running or `STUDIO_URL` is wrong.
-- **401 unauthorized**: the studio enforces a token; set the matching `STUDIO_TOKEN` (from your subscription).
-- **snapshot_canvas times out**: open `<STUDIO_URL>?remote=1` in a browser tab; the snapshotter runs in the page.
-- **Render tools need Playwright**: run `pip install playwright && playwright install chromium`.
-- **needs an Ultra license**: the hosted studio renders for Ultra tokens only; use your Ultra token or a studio you run yourself.
-
-## Support
-
-`admin@vibedna.ai` · https://vibedna.ai/store/vibegen
-
-License: MIT.
-
-VibeDNA, 2026
+- **"Failed to connect" right after installing (mostly Windows):** the first start can take a minute or two while the antivirus reads the new files, longer than Claude Code waits; later starts take seconds. In the folder that holds `server.py`, load it once, `.venv\Scripts\python.exe -c "import server"` (macOS/Linux: `.venv/bin/python -c "import server"`), then restart Claude Code.
+- **Python older than 3.10** (or `py` not found: try `python`): install a current one from python.org, delete `.venv`, repeat step 1.
+- **"No module named fastmcp":** the entry points at another Python. Register again with the `.venv` one.
+- **401, or "needs an Ultra license":** the studio wants a token. Add `STUDIO_TOKEN` yourself (step 2).
+- **Old tools still show:** an earlier entry is still registered. See step 4.

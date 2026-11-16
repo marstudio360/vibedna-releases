@@ -5,7 +5,7 @@ description: Install Google Ads DNA, the MCP server that lets your AI read and r
 
 # Google Ads DNA: Install Guide
 
-This guide matches version 1.0.2.
+This guide matches version 1.0.3.
 
 > **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do. Ask before anything is written. Never ask for a key, secret or password in the chat. Where `INSTALL.md` differs (bare `pip`, system `python`, local scope), follow this guide; its Google Cloud steps still apply. Before any change to the account, name the campaign, old value and new value, and wait for a yes.
 
@@ -15,10 +15,10 @@ Your AI works on your own Google Ads account: campaign results, custom reports, 
 
 ## Trust box
 
-- **File:** `google-ads-dna-1.0.2.zip`, 14,876 bytes, 4 files, one folder `google-ads-dna/`.
-- **SHA-256:** `17c4cfb226749e28ac9af7b0a1604a06e6d27fe71f5e23a445924514ea408f1c`
-  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.2.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.2.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.2.zip` (capitals are fine). Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.2.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `google-ads-dna-1.0.3.zip`, 16,420 bytes, 4 files, one folder `google-ads-dna/`.
+- **SHA-256:** `bb04508484b9b42a9f0dcac56d068b13ad227c337bb2f7bb7fd0e08502d14cbb`
+  Check before unzipping. Linux: `sha256sum google-ads-dna-1.0.3.zip`. macOS: `shasum -a 256 google-ads-dna-1.0.3.zip`. Windows PowerShell: `Get-FileHash google-ads-dna-1.0.3.zip` (capitals are fine). Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/google-ads-dna-1.0.3.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies:** 2, pinned to exact tested versions: `mcp==1.30.0`, `httpx==0.28.1`.
 - **Reads from the environment:** `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_CUSTOMER_ID`. Optional: `GOOGLE_ADS_MAX_DAILY_BUDGET`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_API_VERSION`, `GOOGLE_ADS_DNA_HOME`.
 - **Writes:** `~/.google-ads-dna/credentials.json` (client id, client secret and Google refresh token, plain JSON; owner-only on macOS and Linux, not on Windows) and `~/.google-ads-dna/actions.jsonl` (one line per change made).
@@ -48,8 +48,8 @@ You sign in to Google in your browser; the refresh token goes to `credentials.js
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (rename an existing `google-ads-dna` folder first). You get `~/vibedna/google-ads-dna` or `C:\Users\<you>\vibedna\google-ads-dna`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.2.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.2.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip google-ads-dna-1.0.3.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive google-ads-dna-1.0.3.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`

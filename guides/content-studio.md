@@ -5,7 +5,7 @@ description: Install the Content Studio MCP of Vibedna Motion DNA, which lets yo
 
 # Motion DNA Content Studio MCP: Install Guide
 
-This guide matches version 1.3.5.
+This guide matches version 1.3.6.
 
 > **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key or password in the chat, and never print one.
 
@@ -17,12 +17,12 @@ The free tier renders at 1080px with a small badge. A Pro key removes the badge 
 
 ## Trust box
 
-- **File:** `social-content-studio-mcp-1.3.5.zip`, 98,516 bytes, 10 files, with no top folder inside: unzip into a new folder.
-- **SHA-256:** `e447beeb9b400ad08c673e3cf6438bcc5ace44eee9936f7626940ec6f59d7bff`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum social-content-studio-mcp-1.3.5.zip`
-  - macOS: `shasum -a 256 social-content-studio-mcp-1.3.5.zip`
-  - Windows PowerShell: `Get-FileHash social-content-studio-mcp-1.3.5.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-content-studio-mcp-1.3.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/content-studio/`: it can be read before anything is downloaded.
+- **File:** `social-content-studio-mcp-1.3.6.zip`, 94,938 bytes, 10 files, with no top folder inside: unzip into a new folder.
+- **SHA-256:** `6b4b657e0c706cb155e0f3980af842ed0ebc16896bc6c281a7e7bea8ae7db2e9`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum social-content-studio-mcp-1.3.6.zip`
+  - macOS: `shasum -a 256 social-content-studio-mcp-1.3.6.zip`
+  - Windows PowerShell: `Get-FileHash social-content-studio-mcp-1.3.6.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-content-studio-mcp-1.3.6.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/content-studio/`: it can be read before anything is downloaded.
 - **Dependencies, held to tested versions (exact, or a range where shown):** `mcp==1.30.0`, `Pillow>=10.0.0,<14`. Optional, not in the requirements file: ffmpeg (reels, video) and Playwright (generative backgrounds, `studio_render_video`). Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
 - **Settings it reads from the environment, all optional:** `CONTENT_STUDIO_LICENSE` (Pro key); `PEXELS_API_KEY`, `UNSPLASH_ACCESS_KEY`, `PIXABAY_API_KEY` (stock photos); `STUDIO_URL`, `STUDIO_TOKEN` (a hosted web editor); folder overrides `POST_ENGINE_OUT`, `POST_ENGINE_FONTS`, `POST_ENGINE_LIBRARY`, `POST_ENGINE_EFFECTS`, `CONTENT_STUDIO_HOME`; `FFMPEG_BIN`, `FFPROBE_BIN`.
 - **Files it writes:** `~/.post-engine/` (renders in `out/`, created at start; fonts, image library, `effects.py`), `~/.content-studio/` (your brands and templates), and any output path you pass to a tool.
@@ -48,14 +48,14 @@ Needs Python 3.10 or newer.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip social-content-studio-mcp-1.3.5.zip -d ~/vibedna/content-studio
+   unzip social-content-studio-mcp-1.3.6.zip -d ~/vibedna/content-studio
    cd ~/vibedna/content-studio
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive social-content-studio-mcp-1.3.5.zip -DestinationPath "$env:USERPROFILE\vibedna\content-studio"
+   Expand-Archive social-content-studio-mcp-1.3.6.zip -DestinationPath "$env:USERPROFILE\vibedna\content-studio"
    cd "$env:USERPROFILE\vibedna\content-studio"
    py -m venv .venv
    .venv\Scripts\python.exe -m pip install -r requirements.txt

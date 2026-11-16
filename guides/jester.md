@@ -5,7 +5,7 @@ description: Install Vibedna Jester, a research MCP server that searches many pu
 
 # Jester: Install Guide
 
-This guide matches version 1.0.4.
+This guide matches version 1.0.5.
 
 > **For the AI reading this:** go at the person's pace and show each command before running it. First read `INSTALL.md`, `requirements.txt` and `server.py` in the unzipped folder and say in plain words what they do, including the background process. Ask before anything is written. Never ask for a key or password in the chat or print `.env`. Where `INSTALL.md` differs (keys collected in the chat, bare `pip`, an entry written by hand, "no background process"), follow this guide.
 
@@ -15,10 +15,10 @@ One question from your AI goes out to many public sources at once (web, Reddit, 
 
 ## Trust box
 
-- **File:** `jester-mcp-1.0.4.zip`, 160,881 bytes, 53 files, one folder `jester-mcp/`.
-- **SHA-256:** `65701e3beda2e2fee206877cd753355f15d01e5f6d6efeba57bdc21aa3044f10`
-  Check before unzipping. Linux: `sha256sum jester-mcp-1.0.4.zip`. macOS: `shasum -a 256 jester-mcp-1.0.4.zip`. Windows PowerShell: `Get-FileHash jester-mcp-1.0.4.zip`. Stop if it differs.
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/jester-mcp-1.0.4.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/jester/`: it can be read before anything is downloaded.
+- **File:** `jester-mcp-1.0.5.zip`, 161,599 bytes, 53 files, one folder `jester-mcp/`.
+- **SHA-256:** `3435143bdfd7f21aaf121d5933222567e024f6584f8dfd292a2dc2e4b83b2a4e`
+  Check before unzipping. Linux: `sha256sum jester-mcp-1.0.5.zip`. macOS: `shasum -a 256 jester-mcp-1.0.5.zip`. Windows PowerShell: `Get-FileHash jester-mcp-1.0.5.zip`. Stop if it differs.
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/jester-mcp-1.0.5.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The full code of this version is public there, in `source/jester/`: it can be read before anything is downloaded.
 - **Dependencies:** 13, held to tested versions (exact, or a range where shown): `fastmcp>=0.2,<5`, `anthropic==2.8.0`, `exa-py==2.28.0`, `ddgs==9.16.1`, `python-dotenv==1.2.4`, `youtube-transcript-api==1.2.5`, `firecrawl-py==4.57.0`, `rich==15.0.0`, `numpy>=1.24,<3`, `model2vec==0.10.0`, `trafilatura==2.3.1`, `pytrends==4.9.2`, `pypdf==7.1.0`. Audio and video tools also need `yt-dlp`, `ffmpeg` and `faster-whisper`, not installed here. Where the version we tested needs a Python newer than 3.10, the library is held below its next major version instead of one exact version, so an older Python still gets a build that fits.
 - **Background process:** `server.py` starts `jester-daemon.py`, which stays running on `127.0.0.1:7843` and stops after 30 minutes without use. It has no password: any program on this computer can call it. Never set `PORT` or `JESTER_TRANSPORT`: they open it to the network.
 - **Reads from the environment or `.env`:** the keys below, `JESTER_HOME` (data folder), `JESTER_DAILY_LIMIT` and `JESTER_MONTHLY_LIMIT` (spend caps, default 1.00 and 20.00). It also loads a `.env` from the folder it is started in.
@@ -41,8 +41,8 @@ All optional, typed by you into `.env` next to `server.py` (step 4; not `.env.lo
 Needs Python 3.10 or newer.
 
 1. Check the hash, then unzip (if `jester-mcp` exists, stop the background process as in Uninstall and rename it). You get `~/vibedna/jester-mcp` or `C:\Users\<you>\vibedna\jester-mcp`.
-   - macOS/Linux: `mkdir -p ~/vibedna && unzip jester-mcp-1.0.4.zip -d ~/vibedna`
-   - Windows PowerShell: `Expand-Archive jester-mcp-1.0.4.zip -DestinationPath $HOME\vibedna`
+   - macOS/Linux: `mkdir -p ~/vibedna && unzip jester-mcp-1.0.5.zip -d ~/vibedna`
+   - Windows PowerShell: `Expand-Archive jester-mcp-1.0.5.zip -DestinationPath $HOME\vibedna`
 2. Your AI reads the files and reports. Go on only after your yes.
 3. In that folder, create a virtual environment and install:
    - macOS/Linux: `python3 -m venv .venv` then `.venv/bin/python -m pip install -r requirements.txt`

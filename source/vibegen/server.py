@@ -39,7 +39,7 @@ mcp = FastMCP("studio-mcp")
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 PRODUCT_SLUG = "vibegen"
 
 

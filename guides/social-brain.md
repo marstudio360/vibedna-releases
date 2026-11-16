@@ -5,7 +5,7 @@ description: Install the Vibedna Social Brain MCP. Paste this file into your AI 
 
 # Social Brain MCP: Install Guide
 
-This guide matches version 1.11.17.
+This guide matches version 1.11.18.
 
 > **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, read `INSTALL.md`, `requirements.txt` and `server.py` and say in plain words what they do before installing anything. Ask before anything is written. Never ask for a key, token or password in the chat, and never open or print `.env` or a token file. Ask again before any tool that publishes, replies, deletes or schedules.
 
@@ -15,12 +15,12 @@ A Python MCP server that runs on your computer. With it your AI can post to Inst
 
 ## Trust box
 
-- **File:** `social-brain-mcp-1.11.17.zip`, 457,930 bytes, 31 files, all inside one `social-brain-mcp/` folder.
-- **SHA-256:** `083b4c81d40f16b93507a7fcfb8468b72b0f619ed26ccf484bf11af762bdc709`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum social-brain-mcp-1.11.17.zip`
-  - macOS: `shasum -a 256 social-brain-mcp-1.11.17.zip`
-  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.11.17.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.11.17.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `social-brain-mcp-1.11.18.zip`, 451,734 bytes, 31 files, all inside one `social-brain-mcp/` folder.
+- **SHA-256:** `9a3adc86793b9e87429b25755a8da576addce6c54ccb4ae80d1aafe806ce1603`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum social-brain-mcp-1.11.18.zip`
+  - macOS: `shasum -a 256 social-brain-mcp-1.11.18.zip`
+  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.11.18.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.11.18.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Dependencies, pinned to exact tested versions:** `fastmcp==3.4.11`, `mcp==1.30.0`, `httpx==0.28.1`, `anthropic==2.8.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`, `tweepy==4.17.0`, `google-api-python-client==2.202.0`, `google-auth==2.62.2`, `google-auth-oauthlib==1.5.0`.
 - **Settings it reads** (from `.env` in its folder, or the environment): `MCPIZE_LICENSE_KEY`, the `META_`, `TWITTER_` and `THREADS_` values, and optionally `ANTHROPIC_API_KEY`, `FFMPEG_BIN`, `STUDIO_TOKEN`, `SB_HOME` (state folder) and `VIBEDNA_HOME`.
 - **Files it writes:** `.env`, `tokens/` and `client_secret.json` inside the unzipped folder; `~/.social-brain/` (schedules, settings, publish tasks); `~/.vibedna/license_cache.json`. `youtube_auth.py` copies the newest `client_secret*.json` from `~/Downloads`. Only when you call `bot_install` or `poster_install`: a crontab line or a Windows scheduled task, and log files in your home folder.
@@ -47,14 +47,14 @@ Needs Python 3.10 or newer, and ffmpeg only for Reels.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip social-brain-mcp-1.11.17.zip -d ~/vibedna/social-brain
+   unzip social-brain-mcp-1.11.18.zip -d ~/vibedna/social-brain
    cd ~/vibedna/social-brain/social-brain-mcp
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive social-brain-mcp-1.11.17.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
+   Expand-Archive social-brain-mcp-1.11.18.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
    cd "$env:USERPROFILE\vibedna\social-brain\social-brain-mcp"
    py -m venv .venv
    .venv\Scripts\python.exe -m pip install -r requirements.txt
