@@ -1,0 +1,3 @@
+# Versions tested with post-engine-mcp 1.3.5 (clean install, 2026-11-16). Exact where the tested version runs on Python 3.10; a range below the next major version otherwise.
+mcp==1.30.0
+Pillow>=10.0.0,<14

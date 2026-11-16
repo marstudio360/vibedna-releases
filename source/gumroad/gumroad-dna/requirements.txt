@@ -1,0 +1,5 @@
+# Exact versions tested with gumroad 2.3.1 (clean install, 2026-11-15). Newer versions may work; these are the ones we ran.
+mcp==1.30.0
+requests==2.34.2
+python-dotenv==1.2.4
+uvicorn==0.54.0

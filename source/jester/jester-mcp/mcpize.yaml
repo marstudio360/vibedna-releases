@@ -1,0 +1,65 @@
+name: jester-dna
+display_name: "JesterDNA: 20-Source Research Intelligence (BYOK Synthesis)"
+description: "LITE mirrors the free public engine at vibedna.ai/jester: 20-source scrape, systematic brief (clusters, contradictions, money signals, niche gaps), manual YouTube digest. PRO at vibedna.ai/store: 4× results (100+), auto YouTube transcripts (free Whisper), watch_topic, scan_competitor, personal index that compounds (trend velocity, money across history), BYOK Exa + Firecrawl, 62 tools, runs locally on your machine."
+
+version: 1
+runtime: python
+author: "VibeDNA"
+category: "research"
+tags:
+  - research
+  - intelligence
+  - youtube
+  - niche-research
+  - competitor-analysis
+  - freelance
+  - crypto
+  - web-scraping
+
+pricing:
+  model: freemium
+  free_description: "8 free tools: research_topic (basic), digest_youtube, find_niche, score_job, query_memory, get_stats, get_budget, get_optimizer"
+  paid_price: 29
+  paid_interval: one-time
+  paid_description: "Full 62-tool unlock: deep research mode (auto YouTube transcripts), watch mode, competitor scan, Firecrawl BYOK + Exa BYOK, contradiction history, trend velocity, money-signals across personal index. One-time purchase, lifetime updates, runs forever on your machine."
+
+license_env: MCPIZE_LICENSE_KEY
+
+tools:
+  free:
+    - research_topic
+    - digest_youtube
+    - digest_playlist
+    - find_niche
+    - research_youtube
+    - score_job
+    - query_memory
+    - get_stats
+    - get_budget
+  paid:
+    - watch_topic
+    - crawl_url
+    - scan_competitor
+
+env_required:
+  - MCPIZE_LICENSE_KEY
+
+env_optional:
+  - JESTER_ROLE          # set to "daemon" on hosted to skip client-mode daemon spawn (hosted-only)
+  - JESTER_TRANSPORT     # set to "http" on hosted so FastMCP serves streamable-http at /mcp
+  - JESTER_LITE          # set to "1" on hosted to gate Pro tools behind license check
+  - ANTHROPIC_API_KEY    # only for autonomous synthesis (synthesize=True). Skip = synthesis happens in your Claude chat on subscription tokens (no double-billing).
+  - EXA_API_KEY          # unlocks Exa neural deep search (free tier at exa.ai)
+  - FIRECRAWL_API_KEY    # unlocks Firecrawl full-page crawl (free tier at firecrawl.dev)
+  - LISTENNOTES_API_KEY  # unlocks podcast episode search (free tier at listennotes.com)
+  - JESTER_DAILY_LIMIT   # cap daily Anthropic spend in USD (only if ANTHROPIC_API_KEY is set)
+  - JESTER_MONTHLY_LIMIT # cap monthly Anthropic spend in USD
+  - JESTER_WHISPER_MAX_SECONDS  # set to 0 to skip Whisper auto-download (~75MB)
+
+transport: stdio
+command: python
+args:
+  - server.py
+
+# Cloud-hosted instance serves canonical MCP HTTP transport at /mcp
+mcpPath: /mcp

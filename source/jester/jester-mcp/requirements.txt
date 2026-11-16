@@ -1,0 +1,18 @@
+# Versions tested with jester 1.0.4 (clean install, 2026-11-16). Exact where the tested version runs on Python 3.10; a range below the next major version otherwise.
+fastmcp>=0.2,<5
+anthropic==2.8.0
+exa-py==2.28.0
+ddgs==9.16.1
+python-dotenv==1.2.4
+youtube-transcript-api==1.2.5
+firecrawl-py==4.57.0
+rich==15.0.0
+numpy>=1.24,<3
+model2vec==0.10.0
+trafilatura==2.3.1
+pytrends==4.9.2
+pypdf==7.1.0
+
+# Optional: enables offline Whisper transcription for YouTube videos without captions
+# Heavy dep (~2GB model on first use). Skip if you only need text/web research.
+# faster-whisper>=1.0

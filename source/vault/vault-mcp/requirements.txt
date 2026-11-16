@@ -1,0 +1,4 @@
+# Exact versions tested with vault 1.1.2 (clean install, 2026-11-15). Newer versions may work; these are the ones we ran.
+cryptography==50.0.2
+keyring==25.7.0
+mcp==1.30.0

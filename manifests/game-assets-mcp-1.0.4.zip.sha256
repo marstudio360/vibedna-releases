@@ -1,0 +1,14 @@
+fd32b3315ec206297489357a00536000c0597974ae04614dfec28f42148d1d35  game-assets-mcp/server.py
+e1d96b501997f0845fd7c48e31cab25da425d437149723a6e6b5fe6808a559b9  game-assets-mcp/INSTALL.md
+686492dfa93109b40345d06a776d99206271a0d581734f3ff8787cf3f44c51fb  game-assets-mcp/asset-forge-mcp/server.py
+370e3d2b41c9eedaa87e5584bcc4493cc3e6620b541e289075fbaff7c577756d  game-assets-mcp/asset-forge-mcp/INSTALL.md
+c37d6b352c66622b52a7729b1976b3c36545cfb342930cbe2956b9b26ff13f6c  game-assets-mcp/asset-forge-mcp/gallery.py
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  game-assets-mcp/asset-forge-mcp/forge/__init__.py
+99ae87bc9ffc57e4ffa7682fea0c70238802f59e3b8ddb3bf794f2b7c6f3d263  game-assets-mcp/asset-forge-mcp/forge/discover.py
+05438e0e240a3fa31da3ffadf654abcf7223b4152c8ba030a742a4e95fcca3a3  game-assets-mcp/asset-forge-mcp/forge/fetch.py
+a7b7ea93d99b0592019fcdd7c62d77919ace44527105d3f2125635d7786622fd  game-assets-mcp/asset-forge-mcp/forge/itch_api.py
+9a6ad6aacf82a4853bcd6b751228da9e3698a5e3b0ba406fa72137f126dd52d1  game-assets-mcp/asset-forge-mcp/forge/licenses.py
+a3d52d2c8ab6aa44e4b2a99cd876a324f86f33472a8008f0554d7bec032a2e52  game-assets-mcp/asset-forge-mcp/forge/packpage.py
+19ace802ae9c24d948c549bca572eac663dbd49da7aec95b2e86b0c11e8ff6ee  game-assets-mcp/vibe-game-assets-mcp/server.py
+b48c90aeb9031a0f9d905a4d7bc2543042104cda5d5ded6d4518b2c9ae38a6a4  game-assets-mcp/vibe-game-assets-mcp/requirements.txt
+69c1929deaa5d7da57397fbfc8d121183fd2176512c9b2beea29d568ebd18ac5  game-assets-mcp/START_PROMPT.md

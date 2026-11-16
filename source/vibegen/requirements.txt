@@ -1,0 +1,5 @@
+# Versions tested with vibegen 1.1.1 (clean install, 2026-11-16). Exact where the tested version runs on Python 3.10; a range below the next major version otherwise.
+fastmcp>=3.2.0,<5
+requests==2.34.2
+# optional, for render_still / render_video / render_song / list_catalog:
+# playwright>=1.45  (then: playwright install chromium)

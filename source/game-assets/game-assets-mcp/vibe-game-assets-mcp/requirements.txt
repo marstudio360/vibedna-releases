@@ -1,0 +1,4 @@
+# Exact versions tested with game-assets 1.0.4 (clean install, 2026-11-15). Newer versions may work; these are the ones we ran.
+mcp==1.30.0
+python-dotenv==1.2.4
+uvicorn==0.54.0
