@@ -5,7 +5,7 @@ description: Install the Vibedna Social Brain MCP. Paste this file into your AI 
 
 # Social Brain MCP: Install Guide
 
-This guide matches version 1.12.8.
+This guide matches version 1.12.9.
 
 > **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` or any script runs, list the 37 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the `*_auth.py` scripts you are going to run, look through the other `.py` files (the runners of the optional parts), and say in plain words what they do. Unzipping runs nothing. Ask before anything is written. Never ask for a key, token or password in the chat, and never open or print `.env` or a token file. Ask again before any tool that publishes, replies, deletes or schedules.
 
@@ -15,12 +15,12 @@ A Python MCP server that runs on your computer. With it your AI can post to Inst
 
 ## Trust box
 
-- **File:** `social-brain-mcp-1.12.8.zip`, 625,634 bytes, 37 files, all inside one `social-brain-mcp/` folder.
-- **SHA-256:** `85bc255fbfd0067aab72d2da4f6e618b8ac8d89698774285b33716ae3cf07fc9`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum social-brain-mcp-1.12.8.zip`
-  - macOS: `shasum -a 256 social-brain-mcp-1.12.8.zip`
-  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.12.8.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.12.8.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `social-brain-mcp-1.12.9.zip`, 627,317 bytes, 37 files, all inside one `social-brain-mcp/` folder.
+- **SHA-256:** `98f0d8c7dcce92922e8740a5b63a46d743a1a9b3fa456697eef5e7b3608026b8`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum social-brain-mcp-1.12.9.zip`
+  - macOS: `shasum -a 256 social-brain-mcp-1.12.9.zip`
+  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.12.9.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.12.9.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Documents in the zip:** `INSTALL.md` is this guide (the same text as https://vibedna.ai/installs/social-brain.md without the zip's own size and checksum; if the two differ, stop and compare the version line and the hash before following either): it takes you from the download to connected accounts, and every required step is in it. `MANUAL.md` is about using it afterwards: scheduled posting, the optional lanes, updating and troubleshooting. `AUTH-GUIDE.md` (also as `.html` and `.pdf`) shows every click on each platform's pages, as a companion to Step 4. `SETUP-ASSISTANT.md` is a short sheet of platform facts for your AI (what each error means, how long each token lasts). `START_PROMPT.md` is the prompt you paste after installing.
 - **Dependencies, pinned to exact tested versions:** `fastmcp==3.4.11`, `mcp==1.30.0`, `httpx==0.28.1`, `anthropic==2.8.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`, `tweepy==4.17.0`, `google-api-python-client==2.202.0`, `google-auth==2.62.2`, `google-auth-oauthlib==1.5.0`.
 - **Settings it reads** (from `.env` in its folder, or the environment): `MCPIZE_LICENSE_KEY` (an older name the setting keeps; it holds your Vibedna licence key), the `META_`, `TWITTER_` and `THREADS_` values, and optionally `ANTHROPIC_API_KEY`, `FFMPEG_BIN`, `SB_FFPROBE`, `STUDIO_TOKEN`, `SB_HOME` (state folder), `SB_DROP_DIR` (a folder of finished posts to pick up) and `VIBEDNA_HOME`. Only for the optional parts below: `RESEND_API_KEY`, `SB_ALERT_EMAIL` and `SB_ALERT_FROM` (alert and review mails), `SB_REVIEW_HOST` and `SB_REVIEW_PORT` (review page), `SB_CLAUDE_BIN` and `SB_CLAUDE_TOKEN_FILE` (content engine), `SB_PUBLISH_ASK` (the question before a post from a chat), `MCP_HTTP`, `MCP_HTTP_TOKEN`, `MCP_HTTP_OPEN`, `MCP_HOST` and `PORT` (web mode), and the `IG_BROWSER_`, `CHROME_SESSIONS` and `BROWSER_LOCK_` values (browser lanes).
@@ -30,6 +30,7 @@ A Python MCP server that runs on your computer. With it your AI can post to Inst
 - **Optional content engine** (queues of posts for X and LinkedIn written from a library you fill in): it runs your own `claude` command line to write the drafts, on your own Claude login, only when you call those tools or schedule them. A scheduled run can hand that command your Claude login from a file, only if you name the file in `SB_CLAUDE_TOKEN_FILE`; no login file is opened otherwise. Drafts wait as pending and nothing is posted by the engine itself.
 - **Optional review page:** `content_review_server.py` shows those pending drafts on `127.0.0.1:8831`. It has no login of its own, so leave `SB_REVIEW_HOST` unset: it then answers only on your own machine.
 - **Optional alert mails:** `alert_runner.py` mails you when an account or a lane stops, only if you set `RESEND_API_KEY` and `SB_ALERT_EMAIL`. Without them it only prints.
+- **An image file for Instagram:** when you give a post or a carousel an image file from your machine and the account is connected through a Facebook Page, the file is uploaded to that Page of yours as a photo that is not published (nobody sees it), Instagram reads it from the link Meta gives it, and the hidden photo is deleted once the post is out (it is also marked temporary, so Meta removes it within a day if a run stops in between). The file goes to graph.facebook.com only, with your own Page token. A link is passed on as it is.
 - **Never:** it does not ask for platform passwords (you log in in your own browser). Installing posts, deletes and schedules nothing.
 
 **Limits.** The hash proves your file is the one this guide describes, not that the code is safe: that is why your AI reads it first. What the platforms or vibedna.ai do with a request cannot be checked from the zip. The tools act on real accounts, and each platform's own rules apply to automated activity. The five tools that delete (`delete_post`, `delete_meta_comment`, `drip_delete`, `engage_delete`, `feed_apply_deletions`) do nothing without `confirm=True`, which your AI passes only after your yes; no tool deletes a whole account. The 19 tools that post or reply, and `drip_run_due` (it posts every queued slot that is due), work the same way when your AI calls them from a chat: nothing goes out without `confirm=True`, passed only after your yes to that exact post. What a schedule, a lane or your own script sends is not asked again, because you approved it when you queued it. `SB_PUBLISH_ASK=0` turns the question off: leave it unset. `MCP_HTTP=1` starts a web server on your own machine and refuses to start without `MCP_HTTP_TOKEN`, unless `MCP_HTTP_OPEN=1` is also set, which serves every tool to whoever reaches that port with no token: leave all three unset unless you need them.
@@ -51,12 +52,12 @@ Needs Python 3.10 or newer, and ffmpeg only for Reels.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip social-brain-mcp-1.12.8.zip -d ~/vibedna/social-brain
+   unzip social-brain-mcp-1.12.9.zip -d ~/vibedna/social-brain
    cd ~/vibedna/social-brain/social-brain-mcp
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive social-brain-mcp-1.12.8.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
+   Expand-Archive social-brain-mcp-1.12.9.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
    cd "$env:USERPROFILE\vibedna\social-brain\social-brain-mcp"
    ```
 

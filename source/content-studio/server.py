@@ -36,7 +36,7 @@ _OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.3.9"
+VERSION = "1.3.10"
 PRODUCT_SLUG = "post-engine-mcp"
 
 
@@ -1909,9 +1909,10 @@ def campaign_render(campaign: str, account: str = "", out_dir: str = "", limit: 
     if errors:
         lines.append("could not render: " + " | ".join(errors[:4]))
     if _local_stills(ready):
-        lines.append("images: %d post(s) carry a still as a file on this machine. Instagram's API takes an image only from a "
-                     "public https link: put each still on storage of your own and write its link in the slot before "
-                     "you queue it (an account set to publish through the logged-in browser takes the file). Reels "
+        lines.append("images: %d post(s) carry a still as a file on this machine. Social Brain 1.12.9 or newer posts "
+                     "it to Instagram as it is when the account is connected through a Facebook Page (the file goes "
+                     "through that Page, unseen) or publishes through the logged-in browser. An older Social Brain, or "
+                     "an account connected with Instagram Login, needs a public https link in the slot instead. Reels "
                      "publish from the file." % _local_stills(ready))
     lines.append("next: call campaign_render again (%d left)" % len(left) if left and not (errors and not made_now)
                  else "next: in Social Brain, drip_schedule(name, slots) with the name and slots of that file" if not left

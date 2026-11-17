@@ -248,8 +248,9 @@ Set `CONTENT_STUDIO_HOME` to keep your brands and templates in another folder (t
   with each file in place, ready for a poster such as Social Brain's `drip_schedule`. It reads your own
   studio space with your licence key (`CONTENT_STUDIO_LICENSE`), renders a few pieces a call (`limit`)
   and skips the ones already there, so call it again until it says every piece has a file. A still
-  in that calendar is a file on your machine: Instagram's API takes an image only from a public
-  https link, so put each still on storage of your own and write its link in the slot. Needs
+  in that calendar is a file on your machine: Social Brain 1.12.9 or newer posts it to Instagram as
+  it is for an account connected through a Facebook Page (an older one, or an account connected
+  with Instagram Login, needs a public https link in the slot). Needs
   Playwright and, for reels, Google Chrome on the machine.
 - `studio_feed_set(drip, view)` / `studio_feed_get()`: drive the feed grid from chat.
 
