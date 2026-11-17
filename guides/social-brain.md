@@ -5,7 +5,7 @@ description: Install the Vibedna Social Brain MCP. Paste this file into your AI 
 
 # Social Brain MCP: Install Guide
 
-This guide matches version 1.12.7.
+This guide matches version 1.12.8.
 
 > **For the AI reading this:** go at the person's pace and show each command before you run it. After unzipping, and before `pip` or any script runs, list the 37 files, read `INSTALL.md`, `MANUAL.md`, `requirements.txt`, `server.py` and the `*_auth.py` scripts you are going to run, look through the other `.py` files (the runners of the optional parts), and say in plain words what they do. Unzipping runs nothing. Ask before anything is written. Never ask for a key, token or password in the chat, and never open or print `.env` or a token file. Ask again before any tool that publishes, replies, deletes or schedules.
 
@@ -15,17 +15,17 @@ A Python MCP server that runs on your computer. With it your AI can post to Inst
 
 ## Trust box
 
-- **File:** `social-brain-mcp-1.12.7.zip`, 623,753 bytes, 37 files, all inside one `social-brain-mcp/` folder.
-- **SHA-256:** `423f9147be925c378b39bdfcfa64560b272101a58c84260c1556a35d9650b3d2`. Check before unzipping; stop if it differs:
-  - Linux: `sha256sum social-brain-mcp-1.12.7.zip`
-  - macOS: `shasum -a 256 social-brain-mcp-1.12.7.zip`
-  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.12.7.zip`
-- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.12.7.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
+- **File:** `social-brain-mcp-1.12.8.zip`, 625,634 bytes, 37 files, all inside one `social-brain-mcp/` folder.
+- **SHA-256:** `85bc255fbfd0067aab72d2da4f6e618b8ac8d89698774285b33716ae3cf07fc9`. Check before unzipping; stop if it differs:
+  - Linux: `sha256sum social-brain-mcp-1.12.8.zip`
+  - macOS: `shasum -a 256 social-brain-mcp-1.12.8.zip`
+  - Windows PowerShell: `Get-FileHash social-brain-mcp-1.12.8.zip`
+- **Where the file comes from:** your library at https://vibedna.ai/library, after signing in with the email you bought or claimed it with. **Second place to check the hash, on another host:** the public record at https://github.com/marstudio360/vibedna-releases (the GitHub account of the maker of Vibedna) has this file's SHA-256 in `checksums.txt` and the SHA-256 of every file inside the zip in `manifests/social-brain-mcp-1.12.8.zip.sha256`. Every change there is a dated commit, so a swapped file would show. The code of this tool is not public: read it in your own copy before installing, as this guide asks.
 - **Documents in the zip:** `INSTALL.md` is this guide (the same text as https://vibedna.ai/installs/social-brain.md without the zip's own size and checksum; if the two differ, stop and compare the version line and the hash before following either): it takes you from the download to connected accounts, and every required step is in it. `MANUAL.md` is about using it afterwards: scheduled posting, the optional lanes, updating and troubleshooting. `AUTH-GUIDE.md` (also as `.html` and `.pdf`) shows every click on each platform's pages, as a companion to Step 4. `SETUP-ASSISTANT.md` is a short sheet of platform facts for your AI (what each error means, how long each token lasts). `START_PROMPT.md` is the prompt you paste after installing.
 - **Dependencies, pinned to exact tested versions:** `fastmcp==3.4.11`, `mcp==1.30.0`, `httpx==0.28.1`, `anthropic==2.8.0`, `python-dotenv==1.2.4`, `uvicorn==0.54.0`, `tweepy==4.17.0`, `google-api-python-client==2.202.0`, `google-auth==2.62.2`, `google-auth-oauthlib==1.5.0`.
 - **Settings it reads** (from `.env` in its folder, or the environment): `MCPIZE_LICENSE_KEY` (an older name the setting keeps; it holds your Vibedna licence key), the `META_`, `TWITTER_` and `THREADS_` values, and optionally `ANTHROPIC_API_KEY`, `FFMPEG_BIN`, `SB_FFPROBE`, `STUDIO_TOKEN`, `SB_HOME` (state folder), `SB_DROP_DIR` (a folder of finished posts to pick up) and `VIBEDNA_HOME`. Only for the optional parts below: `RESEND_API_KEY`, `SB_ALERT_EMAIL` and `SB_ALERT_FROM` (alert and review mails), `SB_REVIEW_HOST` and `SB_REVIEW_PORT` (review page), `SB_CLAUDE_BIN` and `SB_CLAUDE_TOKEN_FILE` (content engine), `SB_PUBLISH_ASK` (the question before a post from a chat), `MCP_HTTP`, `MCP_HTTP_TOKEN`, `MCP_HTTP_OPEN`, `MCP_HOST` and `PORT` (web mode), and the `IG_BROWSER_`, `CHROME_SESSIONS` and `BROWSER_LOCK_` values (browser lanes).
-- **Files it writes:** `.env`, `tokens/` and `client_secret.json` inside the unzipped folder; `~/.social-brain/` (schedules, settings, publish tasks, queues, what each lane posted); `~/.vibedna/license_cache.json`. `youtube_auth.py` copies the newest `client_secret*.json` from `~/Downloads`. Only when you call `bot_install` or `poster_install`: a crontab line or a Windows scheduled task, and its log files (`lane_*.log`, `engage_bot.log`, `drip_runner.log`) in your home folder, or in the state folder when you set `SB_HOME`. Only with a browser lane: small lock files in `BROWSER_LOCK_DIR` (default `/tmp/browser-locks`).
-- **Network:** graph.facebook.com, rupload.facebook.com, graph.instagram.com, graph.threads.net, api.twitter.com, www.googleapis.com and oauth2.googleapis.com for your accounts; the Anthropic API if you set that key; vibedna.ai for the licence check (sends your licence key and the product name) and `check_for_update` (asks for a version number). The vibedna.ai panel is off until you say yes ("Optional: the panel on vibedna.ai" below lists what it sends). api.resend.com is called only if you set `RESEND_API_KEY`, to mail you. www.pinterest.com is read without login only by the Pinterest lane, to confirm a Pin on your public profile. api.ipify.org is called only when you set a `proxy_url` for an account, to check that the proxy works. ssh and scp run only when you give a tool a `host` of your own (to install a schedule on your own server with `bot_install` or `poster_install`, or to read libraries and videos you keep on another machine); leave it empty and they never run. pypi.org is contacted once, by `pip`, when the dependencies install.
+- **Files it writes:** `.env`, `tokens/` and `client_secret.json` inside the unzipped folder; `~/.social-brain/` (schedules, settings, publish tasks, queues, what each lane posted); `~/.vibedna/license_permits.json` (the signed licence permit and when it was last asked; it holds a short hash of your key, never the key itself; under `VIBEDNA_HOME` if set). `youtube_auth.py` copies the newest `client_secret*.json` from `~/Downloads`. Only when you call `bot_install` or `poster_install`: a crontab line or a Windows scheduled task, and its log files (`lane_*.log`, `engage_bot.log`, `drip_runner.log`) in your home folder, or in the state folder when you set `SB_HOME`. Only with a browser lane: lock files in `BROWSER_LOCK_DIR` (default `/tmp/browser-locks`).
+- **Network:** graph.facebook.com, rupload.facebook.com, graph.instagram.com, graph.threads.net, api.twitter.com, www.googleapis.com and oauth2.googleapis.com for your accounts; the Anthropic API if you set that key; vibedna.ai for the licence check (sends your licence key, the product name and a 16 character machine id, a one-way hash made from the computer's name, system and network card number that cannot be read back; the site answers with a signed permit, asked again when a tool checks the key and the last answer is over 12 hours old; offline the paid tools keep working until the permit expires, about three days on a subscription key and about a year on a key bought once) and `check_for_update` (asks for a version number). The vibedna.ai panel is off until you say yes ("Optional: the panel on vibedna.ai" below lists what it sends). api.resend.com is called only if you set `RESEND_API_KEY`, to mail you. www.pinterest.com is read without login only by the Pinterest lane, to confirm a Pin on your public profile. api.ipify.org is called only when you set a `proxy_url` for an account, to check that the proxy works. ssh and scp run only when you give a tool a `host` of your own (to install a schedule on your own server with `bot_install` or `poster_install`, or to read libraries and videos you keep on another machine); leave it empty and they never run. pypi.org is contacted once, by `pip`, when the dependencies install.
 - **Optional browser lanes** (likes, follows, DMs, TikTok, Pinterest) need Webloom, a separate tool, and stay off until you set them up. They act through that logged-in browser on each platform's own website, not through this server's own network calls, and each platform's rules on automated activity apply to them. They keep copies of that browser session's cookies in the state folder.
 - **Optional content engine** (queues of posts for X and LinkedIn written from a library you fill in): it runs your own `claude` command line to write the drafts, on your own Claude login, only when you call those tools or schedule them. A scheduled run can hand that command your Claude login from a file, only if you name the file in `SB_CLAUDE_TOKEN_FILE`; no login file is opened otherwise. Drafts wait as pending and nothing is posted by the engine itself.
 - **Optional review page:** `content_review_server.py` shows those pending drafts on `127.0.0.1:8831`. It has no login of its own, so leave `SB_REVIEW_HOST` unset: it then answers only on your own machine.
@@ -38,7 +38,7 @@ A Python MCP server that runs on your computer. With it your AI can post to Inst
 
 Every key goes in `.env` inside `social-brain-mcp/`, which the server loads itself, so no key goes in the chat or in the register command. Your AI creates `.env` with empty lines (Step 3 below) and names the line for each value; you paste.
 
-- `MCPIZE_LICENSE_KEY`: starts with `vbd_`, from your purchase email or vibedna.ai/library. Needed for the paid tools.
+- `MCPIZE_LICENSE_KEY`: starts with `vbd_`, from your purchase email (with a membership: the email that welcomed you to the plan). Needed for the paid tools.
 - Platform values: only for the platforms you use (Step 4 below, `AUTH-GUIDE.md`).
 - `ANTHROPIC_API_KEY`: optional, only for the AI writing tools, billed to your own account.
 
@@ -51,12 +51,12 @@ Needs Python 3.10 or newer, and ffmpeg only for Reels.
    macOS/Linux:
    ```bash
    mkdir -p ~/vibedna
-   unzip social-brain-mcp-1.12.7.zip -d ~/vibedna/social-brain
+   unzip social-brain-mcp-1.12.8.zip -d ~/vibedna/social-brain
    cd ~/vibedna/social-brain/social-brain-mcp
    ```
    Windows PowerShell (`$env:USERPROFILE` is `C:\Users\<you>`):
    ```powershell
-   Expand-Archive social-brain-mcp-1.12.7.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
+   Expand-Archive social-brain-mcp-1.12.8.zip -DestinationPath "$env:USERPROFILE\vibedna\social-brain"
    cd "$env:USERPROFILE\vibedna\social-brain\social-brain-mcp"
    ```
 
@@ -191,7 +191,7 @@ Go one platform at a time. `AUTH-GUIDE.md` (also `AUTH-GUIDE.pdf`) has every cli
 
 #### Licence
 
-**You:** paste the key from your purchase email into `MCPIZE_LICENSE_KEY=`. It starts with `vbd_`, and it is also in your library at vibedna.ai/library. The free tools work without it.
+**You:** paste the key from your purchase email into `MCPIZE_LICENSE_KEY=`. It starts with `vbd_`; with a membership it is in the email that welcomed you to the plan. The free tools work without it.
 
 #### Instagram + Facebook (about 20 clicks, 3 pastes)
 
@@ -279,7 +279,7 @@ Social Brain can show the bots' numbers in the owner's own account at vibedna.ai
 
 Never sent: tokens, passwords, your computer's name, the handles of the people the bots interacted with, or the text of comments and DMs. The numbers are stored in the owner's account and are only visible when signed in to it. `panel_connect(on=False)` stops publishing at any time.
 
-Separately from the panel, two things talk to vibedna.ai: the licence check sends your licence key and the product name to confirm the key, and `check_for_update` asks for the latest version number. Neither sends anything about your social accounts.
+Separately from the panel, two things talk to vibedna.ai: the licence check sends your licence key, the product name and a 16 character machine id (a one-way hash, not your computer's name) to confirm the key, and `check_for_update` asks for the latest version number. Neither sends anything about your social accounts.
 
 The Content Studio tools (`feed_publish_snapshot`, `drip_apply_feed_order`, `drip_apply_feed_captions`, `feed_pending_deletions`, `feed_apply_deletions`) talk to the studio only when you call them, with a studio token you set yourself (`STUDIO_TOKEN`). `feed_publish_snapshot` sends one drip's queue (each post's first caption line, time, status and channels, plus preview thumbnails) and the first caption line, thumbnail and link of your recent Instagram posts.
 
@@ -291,7 +291,7 @@ After installing, paste the start prompt into your AI. It is in the zip as `STAR
 
 1. Remove any schedules first with `bot_uninstall` and `poster_uninstall`.
 2. `claude mcp remove social-brain -s user`
-3. Delete the unzipped folder (it holds `.env` and `tokens/`), `~/.social-brain/` and `~/.vibedna/license_cache.json`. If you installed schedules, also their log files (`lane_*.log`, `engage_bot.log`, `drip_runner.log` in your home folder); if you set `SB_HOME` or `SB_DROP_DIR`, those folders; if you used a browser lane, the lock folder (`/tmp/browser-locks` by default). Nothing else was written.
+3. Delete the unzipped folder (it holds `.env` and `tokens/`), `~/.social-brain/` and `~/.vibedna/license_permits.json` (with `license_cache.json` beside it if an earlier version left one). If you installed schedules, also their log files (`lane_*.log`, `engage_bot.log`, `drip_runner.log` in your home folder); if you set `SB_HOME` or `SB_DROP_DIR`, those folders; if you used a browser lane, the lock folder (`/tmp/browser-locks` by default). Nothing else was written.
 
 ## If something fails
 

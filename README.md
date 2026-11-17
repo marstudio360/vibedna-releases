@@ -33,7 +33,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | content-studio | `social-content-studio-mcp-1.3.7.zip` | 102,701 | 11 | yes, in `source/content-studio/` |
 | cover-studio | `cover-studio-mcp-1.1.6.zip` | 77,761 | 14 | no (paid tool): checksums and file list only |
 | ebook-forge | `ebook-forge-mcp-1.2.5.zip` | 232,128 | 62 | no (paid tool): checksums and file list only |
-| ebook-system | `Ebook-System-1.2.4.zip` | 255,346 | 64 | no (paid tool): checksums and file list only |
+| ebook-system | `Ebook-System-1.2.5.zip` | 257,344 | 64 | no (paid tool): checksums and file list only |
 | email-dna | `email-dna-2.0.3.zip` | 128,092 | 31 | no (paid tool): checksums and file list only |
 | game-assets | `game-assets-mcp-1.0.6.zip` | 61,803 | 15 | yes, in `source/game-assets/` |
 | godot | `godot-vibe-mcp-1.1.7.zip` | 70,532 | 7 | no (paid tool): checksums and file list only |
@@ -42,8 +42,9 @@ paid tools, read the code in your own copy first, which is what each install gui
 | jester | `jester-mcp-1.0.9.zip` | 168,502 | 51 | no (paid tool): checksums and file list only |
 | measure-dna | `measure-dna-1.2.2.zip` | 42,009 | 6 | no (paid tool): checksums and file list only |
 | post-engine | `post-engine-1.0.2.zip` | 13,749 | 4 | no (paid tool): checksums and file list only |
-| social-brain | `social-brain-mcp-1.12.7.zip` | 623,753 | 37 | no (paid tool): checksums and file list only |
+| social-brain | `social-brain-mcp-1.12.8.zip` | 625,634 | 37 | no (paid tool): checksums and file list only |
 | spotify-manager | `spotify-manager-mcp-1.2.5.zip` | 57,796 | 11 | no (paid tool): checksums and file list only |
+| store-system | `store-system-1.0.5.zip` | 302,443 | 136 | no (paid tool): checksums and file list only |
 | unity | `unity-vibe-mcp-1.0.4.zip` | 38,763 | 5 | no (paid tool): checksums and file list only |
 | unreal | `unreal-vibe-mcp-1.0.4.zip` | 29,708 | 5 | no (paid tool): checksums and file list only |
 | vault | `vault-mcp-1.1.6.zip` | 28,006 | 10 | yes, in `source/vault/` |
