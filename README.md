@@ -30,7 +30,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | Tool | File | Bytes | Files | Source here |
 |---|---|---|---|---|
 | ai-company-system | `ai-company-system-1.0.3.zip` | 328,890 | 88 | no (paid tool): checksums and file list only |
-| content-studio | `social-content-studio-mcp-1.3.8.zip` | 108,176 | 11 | yes, in `source/content-studio/` |
+| content-studio | `social-content-studio-mcp-1.3.9.zip` | 108,576 | 11 | yes, in `source/content-studio/` |
 | cover-studio | `cover-studio-mcp-1.1.6.zip` | 77,761 | 14 | no (paid tool): checksums and file list only |
 | ebook-forge | `ebook-forge-mcp-1.2.5.zip` | 232,128 | 62 | no (paid tool): checksums and file list only |
 | ebook-system | `Ebook-System-1.2.5.zip` | 257,344 | 64 | no (paid tool): checksums and file list only |

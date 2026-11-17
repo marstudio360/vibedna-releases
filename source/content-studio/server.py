@@ -36,7 +36,7 @@ _OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.3.8"
+VERSION = "1.3.9"
 PRODUCT_SLUG = "post-engine-mcp"
 
 
@@ -1826,6 +1826,16 @@ def _campaign_files(slots: list, files: dict):
     return ready, waiting
 
 
+def _local_stills(slots: list) -> int:
+    """How many posts hold an image that is a file here and not a link."""
+    def is_local_image(v):
+        if isinstance(v, list):
+            return any(is_local_image(x) for x in v)
+        return (isinstance(v, str) and v.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+                and not v.lower().startswith(("http://", "https://")))
+    return sum(1 for s in slots if any(is_local_image(v) for v in (s.get("content") or {}).values()))
+
+
 @mcp.tool()
 def campaign_render(campaign: str, account: str = "", out_dir: str = "", limit: int = 3) -> str:
     """Render the pieces of a Motion DNA campaign on this machine and write the calendar Social Brain publishes.
@@ -1898,6 +1908,11 @@ def campaign_render(campaign: str, account: str = "", out_dir: str = "", limit: 
              "posts ready in the calendar: %d of %d -> %s" % (len(ready), len(slots), drip)]
     if errors:
         lines.append("could not render: " + " | ".join(errors[:4]))
+    if _local_stills(ready):
+        lines.append("images: %d post(s) carry a still as a file on this machine. Instagram's API takes an image only from a "
+                     "public https link: put each still on storage of your own and write its link in the slot before "
+                     "you queue it (an account set to publish through the logged-in browser takes the file). Reels "
+                     "publish from the file." % _local_stills(ready))
     lines.append("next: call campaign_render again (%d left)" % len(left) if left and not (errors and not made_now)
                  else "next: in Social Brain, drip_schedule(name, slots) with the name and slots of that file" if not left
                  else "next: fix what failed above, then call campaign_render again")
