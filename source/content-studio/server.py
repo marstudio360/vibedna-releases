@@ -11,6 +11,7 @@ Output goes to ~/.post-engine/out/ by default (POST_ENGINE_OUT), or an explicit 
 """
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -35,7 +36,7 @@ _OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # This copy's version. Bump it when packaging; check_for_update compares it against
 # what the site currently publishes, so an installed copy can tell it is behind.
-VERSION = "1.3.7"
+VERSION = "1.3.8"
 PRODUCT_SLUG = "post-engine-mcp"
 
 
@@ -1419,18 +1420,57 @@ def render_thumbnail(frame: str, title: str, brand: str = "default", eyebrow: st
 
 # --- RENDER ON YOUR OWN MACHINE ---
 # Same engine as the web editor, without needing the browser open. This opens
-# `/studio-render` in a headless Chromium, hands it the document, and the page records it
-# with the SAME recorder the editor's export button uses. Chromium runs on this machine
+# `/studio-render` in a headless browser, hands it the document, and the page draws it
+# with the SAME code the editor's export button uses. The browser runs on this machine
 # ("local"); every user renders on their own hardware.
 import base64 as _b64
 import urllib.parse
 import urllib.request
 
 
+def _studio_base():
+    return os.environ.get("STUDIO_URL", "https://vibedna.ai").rstrip("/")
+
+
+def _motion_headers():
+    """How this machine signs in to the Motion DNA API: the company token, else the person's own key."""
+    tok = os.environ.get("STUDIO_TOKEN", "").strip()
+    if tok:
+        return {"x-studio-token": tok}
+    key = (os.environ.get("MOTION_DNA_KEY") or os.environ.get("CONTENT_STUDIO_LICENSE") or "").strip()
+    return {"Authorization": "Bearer " + key} if key else None
+
+
+def _motion_api(path: str):
+    """GET one Motion DNA API route as JSON. An API refusal comes back as its own message and hint."""
+    import urllib.error
+    h = _motion_headers()
+    if h is None:
+        raise RuntimeError("no key: set CONTENT_STUDIO_LICENSE to your licence key so this machine can read your Motion DNA pieces")
+    url = _studio_base() + "/api/motion/v1" + path
+    req = urllib.request.Request(url, headers={**h, "User-Agent": "Vibedna-PostEngine/" + VERSION})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.loads(r.read().decode() or "null")
+    except urllib.error.HTTPError as e:
+        try:
+            j = json.loads(e.read().decode() or "{}")
+        except Exception:
+            j = {}
+        raise RuntimeError(("%s %s" % (j.get("message") or ("the studio answered %d" % e.code), j.get("hint") or "")).strip())
+
+
 def _studio_doc(project_id: str, aspect: str = "9:16"):
     """Fetch a saved piece's document in the requested aspect ratio."""
     import urllib.request
     tok = os.environ.get("STUDIO_TOKEN", "")
+    if not tok and _motion_headers():
+        # a person's own piece lives in their own studio space: it is read with their key through the Motion DNA API
+        j = _motion_api("/pieces/%s?full=1" % urllib.parse.quote(project_id)) or {}
+        p, doc = j.get("piece") or {}, j.get("document") or {}
+        if aspect and aspect != "9:16":
+            doc = (doc.get("formats") or {}).get(aspect) or doc
+        return p, doc
     url = _projects_url() + "?id=" + urllib.parse.quote(project_id)
     req = urllib.request.Request(url, headers={"x-studio-token": tok} if tok else {})
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -1445,7 +1485,7 @@ def _studio_doc(project_id: str, aspect: str = "9:16"):
 @mcp.tool()
 def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "",
                         where: str = "local") -> str:
-    """Render a saved Content Studio piece to a video file, using the studio's own engine.
+    """Render a saved Motion DNA piece to a video file, using the studio's own engine.
 
     project_id: the piece id (the one in /content-studio?p=<id>)
     aspect:     "9:16" or "1:1", the same toggles the editor shows
@@ -1455,7 +1495,8 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
                 this version: run this MCP on the machine that should do the work.
 
     The frames are drawn by the SAME code as the live preview, so the file cannot drift from
-    what you approved. It records in real time: a 20s ad takes 20s. Needs playwright with
+    what you approved. It renders frame by frame (exactly fps x duration frames, each at n / fps), so it
+    takes longer than the piece itself on a busy machine but never drops or repeats a frame. Needs playwright with
     chromium (pip install playwright, then: playwright install chromium).
     """
     if (where or "local") != "local":
@@ -1475,7 +1516,8 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
 
     tok = os.environ.get("STUDIO_TOKEN", "")
     base = os.environ.get("STUDIO_URL", "https://vibedna.ai").rstrip("/")
-    page_url = base + "/studio-render"
+    render_base = os.environ.get("STUDIO_RENDER_URL", base).rstrip("/")   # same meaning as in _with_render_page
+    page_url = render_base + "/studio-render"
     file_stem = "%s_%s" % (_slug(project_id, 40), aspect.replace(":", "x"))
 
     def _host(u):
@@ -1485,9 +1527,14 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
     # The token goes in a header, and only to the studio's own media route on the studio's
     # own host: never in a URL (logs, history) and never to a third-party host.
     def _is_studio_art(u):
-        return _host(u) == _host(base) and urllib.parse.urlsplit(u).path.startswith("/api/studio/art")
+        return _host(u) in (_host(base), _host(render_base)) and urllib.parse.urlsplit(u).path.startswith("/api/studio/art")
 
     def _with_token(route, request):
+        u = request.url
+        if render_base != base and u.startswith(render_base):
+            route.fulfill(response=route.fetch(url=base + u[len(render_base):],
+                                               headers={**request.headers, "x-studio-token": tok}))
+            return
         route.continue_(headers={**request.headers, "x-studio-token": tok})
 
     media = set()
@@ -1507,12 +1554,30 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
 
     def _run_render():
         failures = []
+        hints = {}   # stripped address -> the file names in its query (?f=, ?key=), so a warning can name the file
+
+        def _hint(u):
+            base, _, q = u.partition("?")
+            for part in q.split("&"):
+                k, _, v = part.partition("=")
+                if k in ("f", "key", "name", "file") and v:
+                    hints.setdefault(base, set()).add(urllib.parse.unquote(v)[:80])
+            return base
         with sync_playwright() as pw:
             # No --disable-web-security: the page loads every medium with
             # crossOrigin="anonymous", so the canvas stays readable without it, and the flag
             # would let any script on the page read other sites and this machine's local
             # services while it records.
-            b = pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+            # Google Chrome, not Playwright's own Chromium: the export encodes H.264 + AAC, and the
+            # open-source build has neither, so it fails with "Unsupported codec type" (2026-10-16).
+            # STUDIO_RENDER_BROWSER = a Chrome executable; else the installed Chrome; else Chromium.
+            args = ["--autoplay-policy=no-user-gesture-required"]
+            exe = os.environ.get("STUDIO_RENDER_BROWSER", "")
+            try:
+                b = (pw.chromium.launch(executable_path=exe, args=args) if exe
+                     else pw.chromium.launch(channel="chrome", args=args))
+            except Exception:
+                b = pw.chromium.launch(args=args)
             try:
                 ctx = b.new_context(accept_downloads=True)
                 if tok:
@@ -1520,22 +1585,46 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
                 pg = ctx.new_page()
                 downloads = []
                 pg.on("download", lambda d: downloads.append(d))
-                pg.on("requestfailed", lambda r: failures.append(r.url.split("?", 1)[0]))
+                pg.on("requestfailed", lambda r: failures.append(_hint(r.url)))
                 pg.on("response", lambda r: r.status >= 400 and failures.append(
-                    "%s (HTTP %d)" % (r.url.split("?", 1)[0], r.status)))
+                    "%s (HTTP %d)" % (_hint(r.url), r.status)))
                 pg.goto(page_url, wait_until="load", timeout=90000)
                 pg.wait_for_function("() => window.studioRenderReady === true", timeout=60000)
-                wait_ms = int((doc.get("duration") or 20) * 1000) + 120000
+                # frame by frame, each short clip stopped on its exact frame: on a busy machine a 17 s
+                # piece took 2 min 10 s (2026-10-16), so the wait grows with the piece, with room
+                wait_ms = int((doc.get("duration") or 20) * 15000) + 180000
                 # evaluate() takes no timeout, so the job is started and then waited on.
                 pg.evaluate("""(d) => { window.studioRenderOut = undefined;
                     Promise.resolve(window.studioRenderJob(d)).then(
                       r => { window.studioRenderOut = {ok: r == null ? "" : String(r)}; },
                       e => { window.studioRenderOut = {err: String(e)}; }); }""", doc)
-                pg.wait_for_function("() => window.studioRenderOut !== undefined",
-                                     timeout=wait_ms, polling=500)
+                # Wait while the page keeps moving, not a fixed time: a heavy code-layer piece (26.5 s, 4 layers with
+                # big shadows) needed more than duration x 15 s + 3 min and was cut at 99% (2026-11-04). The page
+                # shows "frame by frame N%"; every 3 min the percent must have grown, with a far ceiling for safety.
+                import re as _re
+                def _pct():
+                    try:
+                        m = _re.search(r"(\d+)%", pg.evaluate("() => document.body.innerText") or "")
+                        return int(m.group(1)) if m else -1
+                    except Exception:
+                        return -1
+                deadline, last = time.time() + max(wait_ms / 1000, (doc.get("duration") or 20) * 120 + 600), -1
+                while True:
+                    try:
+                        pg.wait_for_function("() => window.studioRenderOut !== undefined",
+                                             timeout=min(wait_ms, 180000), polling=500)
+                        break
+                    except Exception:
+                        now_pct = _pct()
+                        if now_pct <= last or time.time() > deadline:
+                            return {"err": "the render stalled at %s%% (no progress for 3 min)" % now_pct
+                                    if now_pct <= last else "the render passed its time ceiling at %s%%" % now_pct}
+                        last = now_pct
                 res = pg.evaluate("() => window.studioRenderOut") or {}
                 if res.get("err"):
-                    return {"err": "the page failed: %s" % res["err"][:200]}
+                    hint = (" (this browser cannot encode H.264: install Google Chrome or set STUDIO_RENDER_BROWSER"
+                            " to a Chrome executable)") if "codec" in str(res["err"]).lower() else ""
+                    return {"err": "the page failed: %s%s" % (res["err"][:200], hint)}
                 payload = res.get("ok") or ""
                 if payload.startswith("data:") and "," in payload:
                     ext = ".webm" if "webm" in payload[:40] else ".mp4"
@@ -1544,7 +1633,7 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
                     Path(dest_path).parent.mkdir(parents=True, exist_ok=True)
                     with open(dest_path, "wb") as f:
                         f.write(raw)
-                    return {"path": dest_path, "failures": failures}
+                    return {"path": dest_path, "failures": failures, "hints": hints}
                 # The page hands the file over as a download, not as a return value.
                 if not downloads:
                     try:
@@ -1555,7 +1644,7 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
                 dest_path = out_path or str(_OUT_DIR / (file_stem + ext))
                 Path(dest_path).parent.mkdir(parents=True, exist_ok=True)
                 downloads[0].save_as(dest_path)
-                return {"path": dest_path, "failures": failures}
+                return {"path": dest_path, "failures": failures, "hints": hints}
             finally:
                 b.close()
 
@@ -1569,16 +1658,250 @@ def studio_render_video(project_id: str, aspect: str = "9:16", out_path: str = "
     if r.get("err"):
         return "error: " + r["err"]
     dest_path = r["path"]
+    # A browser without an AAC encoder (Chrome on Linux) writes the sound as Opus. Instagram wants
+    # AAC, so the sound alone is converted; the picture is copied as it came out of the editor.
+    try:
+        codec = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
+                                "stream=codec_name", "-of", "csv=p=0", dest_path],
+                               capture_output=True, text=True, timeout=60).stdout.strip()
+        if codec and codec != "aac":
+            fixed = dest_path + ".aac.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", dest_path, "-c:v", "copy", "-c:a", "aac",
+                            "-b:a", "192k", "-movflags", "+faststart", fixed], check=True, timeout=600)
+            os.replace(fixed, dest_path)
+    except (OSError, subprocess.SubprocessError):
+        pass  # no ffmpeg here: the file is still a valid video, with its sound in Opus
     mb = round(os.path.getsize(dest_path) / 1e6, 2)
     msg = ("rendered with the studio's own engine\n  piece: %s (%s)\n  file: %s (%s MB)\n  "
            "the frames come from the same function that draws the preview"
            % (project.get("name") or project_id, aspect, dest_path, mb))
     missing_media = sorted({f for f in r["failures"] if f.split(" (HTTP", 1)[0] in media})
     if missing_media:
+        def _named(f):
+            base = f.split(" (HTTP", 1)[0]
+            names = sorted(r.get("hints", {}).get(base, ()))
+            return f + (" [file: " + ", ".join(names[:3]) + "]" if names else "")
         msg += ("\n  WARNING: %d media file(s) of this piece did not load and are missing from "
                 "the video (a host that does not allow cross-origin reads, or a bad link): %s"
-                % (len(missing_media), ", ".join(missing_media[:5])))
+                % (len(missing_media), ", ".join(_named(f) for f in missing_media[:5])))
     return msg
+
+
+NAMED_SIZE_PX = {"story": [1080, 1920], "square": [1080, 1080], "portrait": [1080, 1350]}
+
+
+def with_pixel_size(doc: dict) -> dict:
+    """The document with its size as [w, h] pixels. /studio-render gives code layers s.W x s.H from the
+    size when it is an array, but from 9:16 (1080x1920) when it is a name (story, square, portrait), so
+    a 1:1 or 4:5 preview squashed a 1080x1920 drawing into the frame (2026-10-28). The frame is the same."""
+    size = doc.get("size")
+    if isinstance(size, str) and size in NAMED_SIZE_PX:
+        return {**doc, "size": list(NAMED_SIZE_PX[size])}
+    return doc
+
+
+def _with_render_page(job, timeout_ms: int = 120000):
+    """Open /studio-render headless (installed Chrome, else Chromium; the studio token goes only to
+    the studio's own media route, in a header) and run job(page). Runs in its own thread because
+    sync Playwright cannot run inside the MCP's event loop."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception:
+        raise RuntimeError("playwright is missing in this Python (pip install playwright, then: playwright install chromium)")
+    tok = os.environ.get("STUDIO_TOKEN", "")
+    base = os.environ.get("STUDIO_URL", "https://vibedna.ai").rstrip("/")
+    # STUDIO_RENDER_URL: draw on another copy of the site (a build being tested) while pieces and media still come
+    # from STUDIO_URL; a test copy has no storage keys of its own (2026-11-04 exporter fix, tested before shipping)
+    render_base = os.environ.get("STUDIO_RENDER_URL", base).rstrip("/")
+    page_url = render_base + "/studio-render"
+    hosts = {urllib.parse.urlsplit(b).netloc.lower().removeprefix("www.") for b in (base, render_base)}
+
+    def is_art(u):
+        p = urllib.parse.urlsplit(u)
+        return p.netloc.lower().removeprefix("www.") in hosts and p.path.startswith("/api/studio/art")
+
+    def art_route(route, req):
+        u = req.url
+        if render_base != base and u.startswith(render_base):
+            # a test copy over http asks for media the live site keeps: fetch it there (continue_ cannot change
+            # http to https) and hand it to the page
+            route.fulfill(response=route.fetch(url=base + u[len(render_base):],
+                                               headers={**req.headers, "x-studio-token": tok}))
+            return
+        route.continue_(headers={**req.headers, "x-studio-token": tok})
+
+    def run():
+        with sync_playwright() as pw:
+            args = ["--autoplay-policy=no-user-gesture-required"]
+            exe = os.environ.get("STUDIO_RENDER_BROWSER", "")
+            try:
+                b = (pw.chromium.launch(executable_path=exe, args=args) if exe
+                     else pw.chromium.launch(channel="chrome", args=args))
+            except Exception:
+                b = pw.chromium.launch(args=args)
+            try:
+                ctx = b.new_context()
+                if tok:
+                    ctx.route(is_art, art_route)
+                pg = ctx.new_page()
+                pg.set_default_timeout(timeout_ms)
+                pg.goto(page_url, wait_until="load", timeout=90000)
+                pg.wait_for_function("() => window.studioRenderReady === true", timeout=60000)
+                return job(pg)
+            finally:
+                b.close()
+
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(run).result()
+
+
+def _page_call(pg, fn: str, *args):
+    """Call an async window function and wait for it (evaluate takes no timeout of its own)."""
+    if not pg.evaluate("(n) => typeof window[n] === 'function'", fn):
+        raise LookupError(fn)
+    pg.evaluate("""([n, a]) => { window.__mcpOut = undefined;
+        Promise.resolve(window[n](...a)).then(r => { window.__mcpOut = {ok: r}; },
+                                              e => { window.__mcpOut = {err: String(e)}; }); }""", [fn, list(args)])
+    pg.wait_for_function("() => window.__mcpOut !== undefined", polling=300)
+    out = pg.evaluate("() => window.__mcpOut") or {}
+    if "err" in out:
+        raise RuntimeError(out["err"][:300])
+    return out.get("ok")
+
+
+def _render_still_in_page(document: dict, out: str) -> str:
+    """One still of a document, drawn by /studio-render (studioFrames) at its `t` (default 0)."""
+    d = with_pixel_size(dict(document))
+    t = float(document.get("t") or 0)
+    try:
+        urls = _with_render_page(lambda pg: _page_call(pg, "studioFrames", d, [t], {"scale": 1}))
+    except LookupError:
+        raise RuntimeError("this site's /studio-render has no studioFrames yet (update the site)")
+    u = (urls or [None])[0]
+    if not (isinstance(u, str) and u.startswith("data:") and "," in u):
+        raise RuntimeError("the studio page returned no frame")
+    png = _b64.b64decode(u.split(",", 1)[1])
+    path = Path(out)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.suffix.lower() in (".jpg", ".jpeg"):
+        from io import BytesIO
+        from PIL import Image
+        Image.open(BytesIO(png)).convert("RGB").save(path, quality=95)
+    else:
+        path.write_bytes(png)
+    return str(path)
+
+
+# --- Motion DNA campaigns: render every piece on this machine and hand Social Brain a ready calendar ---
+# The campaign maker lives in Motion DNA (vibedna.ai/api/motion/v1/campaigns). It plans, writes and makes the
+# pieces in the person's own studio space. What it cannot do from the site is produce the files; that is this
+# machine's job, with the same engine the editor uses, so the files cost nothing to anyone but the machine.
+
+_PIECE_IN_SLOT = re.compile(r"<exported file of piece (.+?)>")
+
+
+def _campaign_files(slots: list, files: dict):
+    """The export's slots with every placeholder swapped for the rendered file; a slot is ready when all its pieces are."""
+    ready, waiting = [], []
+    for s in slots:
+        out = json.loads(json.dumps(s))
+        missing = []
+
+        def swap(v):
+            if isinstance(v, str):
+                m = _PIECE_IN_SLOT.fullmatch(v)
+                if not m:
+                    return v
+                f = files.get(m.group(1))
+                if not f:
+                    missing.append(m.group(1))
+                return f or v
+            if isinstance(v, list):
+                return [swap(x) for x in v]
+            return v
+
+        out["content"] = {k: swap(v) for k, v in (out.get("content") or {}).items()}
+        (waiting if missing else ready).append(out)
+    return ready, waiting
+
+
+@mcp.tool()
+def campaign_render(campaign: str, account: str = "", out_dir: str = "", limit: int = 3) -> str:
+    """Render the pieces of a Motion DNA campaign on this machine and write the calendar Social Brain publishes.
+
+    campaign: the campaign id (motion_campaign_list shows it; it is in the campaign's links too)
+    account:  the account name in Social Brain, written into each channel ("ig_reel:<account>")
+    out_dir:  where the files go. Empty = the output folder / the campaign id
+    limit:    how many pieces to render in this call (a reel takes minutes: it is drawn frame by frame).
+              Call again until it says every piece is rendered; files already there are not rendered twice.
+
+    Videos come out as .mp4 and stills as .png, drawn by the SAME code as the editor's preview. When every piece
+    of a post is rendered, the post goes into <out_dir>/<campaign>_drip.json with its file in place; hand its
+    `slots` to Social Brain's drip_schedule(name, slots). Trial reels are already marked to stay off the grid.
+    """
+    cid = re.sub(r"[^a-z0-9-]", "", str(campaign or "").strip().lower())
+    if not cid:
+        return "error: give the campaign id (motion_campaign_list shows yours)"
+    try:
+        limit = max(1, min(int(limit), 20))
+    except (TypeError, ValueError):
+        return "error: limit must be a number from 1 to 20"
+    try:
+        q = ("?account=" + urllib.parse.quote(account)) if account else ""
+        ex = _motion_api("/campaigns/%s/export%s" % (cid, q))
+    except Exception as e:
+        return "error: could not read the campaign -> %s" % str(e)[:240]
+    slots = ((ex or {}).get("drip") or {}).get("slots") or []
+    folder = Path(out_dir) if out_dir else _OUT_DIR / cid
+    folder.mkdir(parents=True, exist_ok=True)
+    pieces = []
+    for s in slots:
+        for pid in s.get("motion_pieces") or []:
+            if pid not in pieces:
+                pieces.append(pid)
+    if not pieces:
+        why = "; ".join("%s: %s" % (n.get("slot"), n.get("why")) for n in ((ex or {}).get("not_included") or [])[:4])
+        return "nothing to render: the campaign has no made piece yet (motion_campaign_make first). %s" % why
+
+    files, made_now, errors = {}, [], []
+    for pid in pieces:
+        done = next((str(p) for p in (folder / (pid + ".mp4"), folder / (pid + ".webm"), folder / (pid + ".png")) if p.exists() and p.stat().st_size > 0), "")
+        if done:
+            files[pid] = done
+            continue
+        if len(made_now) >= limit:
+            continue
+        try:
+            doc = (_motion_api("/pieces/%s?full=1" % urllib.parse.quote(pid)) or {}).get("document") or {}
+            if doc.get("duration"):
+                r = studio_render_video(project_id=pid, out_path=str(folder / (pid + ".mp4")))
+                if str(r).startswith("error"):
+                    raise RuntimeError(str(r)[7:])
+                path = next((str(p) for p in (folder / (pid + ".mp4"), folder / (pid + ".webm")) if p.exists()), "")
+                if not path:
+                    raise RuntimeError("the render reported no file")
+            else:
+                path = _render_still_in_page(doc, str(folder / (pid + ".png")))
+            files[pid] = path
+            made_now.append(pid)
+        except Exception as e:
+            errors.append("%s: %s" % (pid, str(e)[:200]))
+
+    ready, waiting = _campaign_files(slots, files)
+    drip = folder / (cid + "_drip.json")
+    drip.write_text(json.dumps({"name": (ex.get("drip") or {}).get("name") or cid, "slots": ready,
+                                "waiting_for_files": [w.get("id") for w in waiting]}, indent=1), encoding="utf-8")
+    left = [p for p in pieces if p not in files]
+    lines = ["rendered now: %d (%s)" % (len(made_now), ", ".join(made_now) or "none"),
+             "pieces with a file: %d of %d" % (len(files), len(pieces)),
+             "posts ready in the calendar: %d of %d -> %s" % (len(ready), len(slots), drip)]
+    if errors:
+        lines.append("could not render: " + " | ".join(errors[:4]))
+    lines.append("next: call campaign_render again (%d left)" % len(left) if left and not (errors and not made_now)
+                 else "next: in Social Brain, drip_schedule(name, slots) with the name and slots of that file" if not left
+                 else "next: fix what failed above, then call campaign_render again")
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":

@@ -243,6 +243,12 @@ Set `CONTENT_STUDIO_HOME` to keep your brands and templates in another folder (t
 - `studio_list_projects()` / `studio_save_project(name, ...)` / `studio_open_project(id)`:
   keep a piece as a named project and load it back onto the canvas.
 - `studio_render_video(project_id, aspect, ...)`: render a saved piece to a video file.
+- `campaign_render(campaign, account, out_dir, limit)`: render every piece of a Motion DNA campaign on this
+  machine (reels as video, posts and slides as images) and write `<campaign>_drip.json`, the calendar
+  with each file in place, ready for a poster such as Social Brain's `drip_schedule`. It reads your own
+  studio space with your licence key (`CONTENT_STUDIO_LICENSE`), renders a few pieces a call (`limit`)
+  and skips the ones already there, so call it again until it says every piece has a file. Needs
+  Playwright and, for reels, Google Chrome on the machine.
 - `studio_feed_set(drip, view)` / `studio_feed_get()`: drive the feed grid from chat.
 
 **Extend the studio:**
