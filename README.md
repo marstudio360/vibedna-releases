@@ -42,7 +42,7 @@ paid tools, read the code in your own copy first, which is what each install gui
 | jester | `jester-mcp-1.0.9.zip` | 168,502 | 51 | no (paid tool): checksums and file list only |
 | measure-dna | `measure-dna-1.2.2.zip` | 42,009 | 6 | no (paid tool): checksums and file list only |
 | post-engine | `post-engine-1.0.2.zip` | 13,749 | 4 | no (paid tool): checksums and file list only |
-| social-brain | `social-brain-mcp-1.12.10.zip` | 630,556 | 37 | no (paid tool): checksums and file list only |
+| social-brain | `social-brain-mcp-1.12.11.zip` | 634,235 | 37 | no (paid tool): checksums and file list only |
 | spotify-manager | `spotify-manager-mcp-1.2.5.zip` | 57,796 | 11 | no (paid tool): checksums and file list only |
 | store-system | `store-system-1.0.5.zip` | 302,443 | 136 | no (paid tool): checksums and file list only |
 | unity | `unity-vibe-mcp-1.0.4.zip` | 38,763 | 5 | no (paid tool): checksums and file list only |
